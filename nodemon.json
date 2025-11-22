@@ -1,0 +1,10 @@
+{
+  "watch": [
+    "."
+  ],
+  "ext": "ts,js,json",
+  "ignore": [
+    "node_modules"
+  ],
+  "exec": "tsx app.ts"
+}
