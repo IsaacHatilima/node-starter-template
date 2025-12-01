@@ -2,7 +2,7 @@ import {PrismaClient} from "../../../generated/prisma/client";
 import bcrypt from "bcrypt";
 import {normalizeEmail, toTitleCase} from "../../utils/string";
 import {container} from "../../lib/container";
-import {sendMail} from "../../lib/mailer";
+import {buildEmailTemplate, sendMail} from "../../lib/mailer";
 
 export class RegisterService {
     constructor(private db: PrismaClient) {
@@ -43,11 +43,12 @@ export class RegisterService {
             await sendMail(
                 user.email,
                 "Verify your email",
-                `
-                    <p>Hello ${user.profile?.first_name},</p>
-                    <p>Please verify your email by clicking the link below:</p>
-                    <p><a href="${verificationUrl}">Verify Email</a></p>
-                  `
+                buildEmailTemplate({
+                    name: user.profile?.first_name ?? "there",
+                    message: "Please verify your email by clicking the button below.",
+                    url: verificationUrl,
+                    buttonText: "Verify Email",
+                })
             );
 
             return user;

@@ -7,6 +7,7 @@ import {AuthLimiter} from "./middleware/rateLimiter";
 import VerifyEmailController from "./controllers/auth/VerifyEmailController";
 import RefreshTokenController from "./controllers/auth/RefreshTokenController";
 import LogoutController from "./controllers/auth/LogoutController";
+import ForgotPasswordController from "./controllers/auth/ForgotPasswordController";
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.post("/auth/register", AuthLimiter, RegisterController);
 router.get("/auth/me", AuthMiddleware, MeController);
 router.get("/auth/verify-email", VerifyEmailController);
 router.post("/auth/refresh", RefreshTokenController);
+router.post("/auth/forgot-password", ForgotPasswordController);
 
 export default router;
