@@ -6,6 +6,7 @@ import {EmailVerificationService} from "../services/auth/EmailVerificationServic
 import {RefreshTokenService} from "../services/auth/RefreshTokenService";
 import {LogoutService} from "../services/auth/LogoutService";
 import {ForgotPasswordService} from "../services/auth/ForgotPasswordService";
+import {ForgotPasswordTokenChecker} from "../services/auth/ForgotPasswordTokenCheckerService";
 
 class Container {
     prisma = new PrismaClient();
@@ -17,6 +18,7 @@ class Container {
     refreshTokenService = new RefreshTokenService(this.prisma);
     logoutService = new LogoutService(this.prisma);
     forgotPasswordService = new ForgotPasswordService(this.prisma);
+    forgotPasswordTokenChecker = new ForgotPasswordTokenChecker(this.prisma);
 }
 
 export const container = new Container();

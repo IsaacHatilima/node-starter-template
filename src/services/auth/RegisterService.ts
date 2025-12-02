@@ -38,7 +38,7 @@ export class RegisterService {
                     user.email
                 );
 
-            const verificationUrl = `${process.env.APP_URL}/verify-email?token=${verificationToken}`;
+            const verificationUrl = `${process.env.APP_URL}/auth/verify-email?token=${verificationToken}`;
 
             await sendMail(
                 user.email,
