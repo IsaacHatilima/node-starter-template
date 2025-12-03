@@ -1,3 +1,4 @@
+import "dotenv/config";
 import {prisma} from "../../config/db";
 import bcrypt from "bcrypt";
 import {normalizeEmail, toTitleCase} from "../../utils/string";

@@ -1,3 +1,4 @@
+import "dotenv/config";
 import {randomUUID} from "crypto";
 import jwt, {SignOptions} from "jsonwebtoken";
 

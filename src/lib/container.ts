@@ -1,4 +1,3 @@
-import {PrismaClient} from "../generated/prisma/client";
 import {RegisterService} from "../services/auth/RegisterService";
 import {MeService} from "../services/auth/MeService";
 import {LoginService} from "../services/auth/LoginService";
@@ -10,17 +9,15 @@ import {ForgotPasswordTokenCheckerService} from "../services/auth/ForgotPassword
 import {ChangePasswordService} from "../services/auth/ChangePasswordService";
 
 class Container {
-    prisma = new PrismaClient();
-
-    loginService = new LoginService(this.prisma);
-    registerService = new RegisterService(this.prisma);
-    emailVerificationService = new EmailVerificationService(this.prisma);
-    meService = new MeService(this.prisma);
-    refreshTokenService = new RefreshTokenService(this.prisma);
-    logoutService = new LogoutService(this.prisma);
-    forgotPasswordService = new ForgotPasswordService(this.prisma);
-    forgotPasswordTokenCheckerService = new ForgotPasswordTokenCheckerService(this.prisma);
-    changePasswordService = new ChangePasswordService(this.prisma);
+    loginService = new LoginService();
+    registerService = new RegisterService();
+    emailVerificationService = new EmailVerificationService();
+    meService = new MeService();
+    refreshTokenService = new RefreshTokenService();
+    logoutService = new LogoutService();
+    forgotPasswordService = new ForgotPasswordService();
+    forgotPasswordTokenCheckerService = new ForgotPasswordTokenCheckerService();
+    changePasswordService = new ChangePasswordService();
 }
 
 export const container = new Container();

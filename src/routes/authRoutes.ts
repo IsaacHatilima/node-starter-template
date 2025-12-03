@@ -17,10 +17,10 @@ router.post("/login", AuthLimiter, LoginController);
 router.post("/logout", AuthMiddleware, LogoutController);
 router.post("/register", AuthLimiter, RegisterController);
 router.get("/me", AuthMiddleware, MeController);
-router.get("/verify-email", VerifyEmailController);
-router.post("/refresh", RefreshTokenController);
-router.post("/forgot-password", ForgotPasswordController);
-router.get("/check-password-reset-token", ForgotPasswordTokenCheckerController);
+router.get("/verify-email", AuthLimiter, VerifyEmailController);
+router.post("/refresh", AuthMiddleware, RefreshTokenController);
+router.post("/forgot-password", AuthLimiter, ForgotPasswordController);
+router.get("/check-password-reset-token", AuthLimiter, ForgotPasswordTokenCheckerController);
 router.post("/change-password", ChangePasswordController);
 
 export default router;

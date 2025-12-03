@@ -1,24 +1,37 @@
+import "dotenv/config";
 import {Request, Response} from "express";
 import {container} from "../../lib/container";
 
 export default async function LogoutController(req: Request, res: Response) {
 
     const refreshToken = req.cookies?.refresh_token;
+    const isProduction = process.env.APP_ENV === "production";
 
     if (!refreshToken) {
+        res.clearCookie("access_token", {
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: "strict",
+            path: "/",
+        });
         return res.status(200).json({message: "Logged out"});
     }
 
     await container.logoutService.logout(refreshToken);
 
-    // Remove cookie
     res.clearCookie("refresh_token", {
         httpOnly: true,
-        secure: process.env.APP_ENV === "production",
+        secure: isProduction,
         sameSite: "strict",
-        path: "/auth"
+        path: "/auth",
     });
 
+    res.clearCookie("access_token", {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: "strict",
+        path: "/",
+    });
 
     return res.json({message: "Logged out."});
 }

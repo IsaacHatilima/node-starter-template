@@ -13,22 +13,18 @@ export async function AuthMiddleware(
     res: Response,
     next: NextFunction
 ) {
-    const authHeader = req.headers.authorization;
+    const token = req.cookies?.access_token;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!token) {
         return res.status(401).json({errors: ["Unauthorized"]});
     }
 
-    const token = authHeader.split(" ")[1];
-
     try {
-        // 1. Verify token
         const decoded: any = jwt.verify(
             token,
             process.env.JWT_SECRET as string
         );
 
-        // 2. Check if THIS access token has been revoked
         if (decoded.jti) {
             const revoked = await prisma.refreshToken.findFirst({
                 where: {
@@ -42,11 +38,20 @@ export async function AuthMiddleware(
             }
         }
 
-        // 3. Put user on request and continue
+        const user = await prisma.user.findUnique({
+            where: {id: decoded.id},
+            select: {id: true, email: true}
+        });
+
+        if (!user) {
+            return res.status(401).json({errors: ["Invalid or expired token"]});
+        }
+
         req.user = decoded;
         next();
 
     } catch (error) {
+        console.error(error);
         return res.status(401).json({errors: ["Invalid or expired token"]});
     }
 }

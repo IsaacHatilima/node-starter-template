@@ -33,7 +33,7 @@ export default async function RegisterController(req: Request, res: Response) {
         });
     } catch (error: any) {
         if (error.message === "EMAIL_TAKEN") {
-            return res.status(422).json({
+            return res.status(400).json({
                 errors: ["Email is already in use"],
             });
         }
