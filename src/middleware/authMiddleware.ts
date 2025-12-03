@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
 import {PrismaClient} from "../generated/prisma/client";
+import {redis} from "../config/redis";
 
 interface AuthRequest extends Request {
     user?: { id: string; email: string };
@@ -33,26 +34,50 @@ export async function AuthMiddleware(
         );
 
         if (decoded.jti) {
-            const revoked = await prisma.refreshToken.findFirst({
-                where: {
-                    jti: decoded.jti,
-                    revoked: true
-                }
-            });
+            const sessionKey = `session:${decoded.jti}`;
+            const session = await redis.get(sessionKey);
 
-            if (revoked) {
-                return res.status(401).json({errors: ["Token expired"]});
+            if (!session) {
+                const revoked = await prisma.refreshToken.findFirst({
+                    where: {
+                        jti: decoded.jti,
+                        revoked: true
+                    }
+                });
+
+                if (revoked) {
+                    return res.status(401).json({errors: ["Token expired"]});
+                }
+
+                await redis.setEx(
+                    sessionKey,
+                    60 * 5,
+                    JSON.stringify({
+                        userId: decoded.id,
+                        jti: decoded.jti,
+                    })
+                );
             }
         }
 
-        const user = await prisma.user.findUnique({
-            where: {id: decoded.id},
-            include: {profile: true},
-            omit: {password: true},
-        });
+        const userCacheKey = `user:${decoded.id}`;
+        const cachedUser = await redis.get(userCacheKey);
+        let user;
 
-        if (!user) {
-            return res.status(401).json({errors: ["Invalid or expired token"]});
+        if (cachedUser) {
+            user = JSON.parse(cachedUser);
+        } else {
+            user = await prisma.user.findUnique({
+                where: {id: decoded.id},
+                include: {profile: true},
+                omit: {password: true},
+            });
+
+            if (!user) {
+                return res.status(401).json({errors: ["Invalid or expired token"]});
+            }
+
+            await redis.setEx(userCacheKey, 60 * 5, JSON.stringify(user));
         }
 
         req.user = user;

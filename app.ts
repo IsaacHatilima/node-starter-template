@@ -3,10 +3,13 @@ import express from "express";
 import router from "./src/routes/routes";
 import cookieParser from "cookie-parser";
 import {connectDB, disconnectDB} from "./src/config/db";
+import {initRedis} from "./src/config/redis";
 
 (async () => {
     try {
         await connectDB();
+
+        await initRedis();
 
         const app = express();
 

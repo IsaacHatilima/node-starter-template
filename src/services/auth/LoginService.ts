@@ -1,7 +1,8 @@
 import {prisma} from "../../config/db";
 import bcrypt from "bcrypt";
 import {generateAccessToken, generateRefreshToken} from "../../lib/jwt";
-import jwt from "jsonwebtoken";
+import jwt, {JwtPayload} from "jsonwebtoken";
+import {redis} from "../../config/redis";
 
 export class LoginService {
     async login(data: {
@@ -34,7 +35,9 @@ export class LoginService {
             id: user.id,
         });
 
-        const {jti} = jwt.decode(access_token) as any;
+        const decoded = jwt.decode(access_token) as JwtPayload & { jti?: string };
+        const jti = decoded.jti as string;
+
 
         await prisma.refreshToken.create({
             data: {
@@ -49,6 +52,23 @@ export class LoginService {
             where: {email: data.email},
             data: {last_login: new Date()}
         });
+
+        await redis.multi()
+            .setEx(
+                `session:${jti}`,
+                60 * 5,
+                JSON.stringify({
+                    userId: user.id,
+                    jti,
+                })
+            )
+            .setEx(
+                `user:${user.id}`,
+                60 * 5,
+                JSON.stringify(user)
+            )
+            .exec();
+
 
         return {
             user,
