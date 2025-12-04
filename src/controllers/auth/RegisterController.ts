@@ -20,7 +20,7 @@ export default async function RegisterController(req: Request, res: Response) {
         const parsed = registerSchema.safeParse(req.body);
 
         if (!parsed.success) {
-            return res.status(422).json({
+            return res.status(400).json({
                 errors: parsed.error.issues.map((i) => i.message),
             });
         }
@@ -28,7 +28,7 @@ export default async function RegisterController(req: Request, res: Response) {
         const user = await container.registerService.register(req.body);
 
         return res.status(201).json({
-            message: "Registered successfully",
+            message: "Registered successfully.",
             user,
         });
     } catch (error: any) {

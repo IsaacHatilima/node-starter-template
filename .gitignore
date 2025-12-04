@@ -2,4 +2,6 @@ node_modules
 .env
 .idea
 .node_modules
-/generated/prisma
+/src/generated/*
+/tests/test.db
+/prisma/migrations

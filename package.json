@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.1.0",
     "@prisma/client": "^6.19.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-rate-limit": "^8.2.1",
     "jsonwebtoken": "^9.0.2",
@@ -17,21 +19,26 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.5",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.1",
     "@types/nodemailer": "^7.0.3",
+    "@types/supertest": "^6.0.3",
     "nodemon": "^3.1.11",
     "prisma": "^6.19.0",
+    "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
   },
   "scripts": {
     "dev": "nodemon",
-    "start": "tsx app.ts",
-    "db:all": "npx prisma migrate dev && npx prisma db push && npx prisma generate"
+    "start": "tsx server.ts",
+    "db:all": "npx prisma migrate dev && npx prisma db push && npx prisma generate",
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",

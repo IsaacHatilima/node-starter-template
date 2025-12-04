@@ -5,7 +5,7 @@ model Profile {
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
 
-  user   User    @relation(fields: [userId], references: [id])
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String  @unique
 
   @@map("profiles")

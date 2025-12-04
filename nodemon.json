@@ -6,5 +6,5 @@
   "ignore": [
     "node_modules"
   ],
-  "exec": "tsx app.ts"
+  "exec": "tsx server.ts"
 }
