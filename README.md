@@ -1,5 +1,9 @@
 # Node API
 
+## Environment Config
+
+API is configured to use PsotggreSQL or SQLite databases.
+
 ## Running API
 
 ```bash
@@ -9,6 +13,14 @@ npm install
 
 # Copy environment config and generate app key
 cp .env.example .env
+
+# Configure DATABASE_URL in .env file to point to your database
+
+# If using SQLite,
+DATABASE_URL="file:./dev.db"
+
+# If using SQLite, Change provider in prisma/schema.prisma to sqlite
+provider = "sqlite"
 
 # Generate JWT_SECRET
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
@@ -44,3 +56,7 @@ npm run db:all
 npm run test
 
 ```
+
+## NOTE
+
+When switching from SQLite to PostgreSQL or vice versa, make sure to delete migration folder and generated folders.
