@@ -45,6 +45,7 @@
     "dev": "nodemon",
     "start": "tsx server.ts",
     "db:all": "npx prisma migrate dev && npx prisma db push && npx prisma generate",
+    "db:sync": "npx prisma db push && npx prisma generate",
     "test": "vitest run"
   },
   "keywords": [],
