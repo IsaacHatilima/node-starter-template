@@ -10,6 +10,8 @@ import {ChangePasswordService} from "../services/auth/ChangePasswordService";
 import {UpdatePasswordService} from "../services/settings/UpdatePasswordService";
 import {UpdateProfileService} from "../services/settings/UpdateProfileService";
 import {DeleteAccountService} from "../services/settings/DeleteAccountService";
+import {TwoFactorService} from "../services/settings/TwoFactorService";
+import {TwoFactorChallengeService} from "../services/auth/TwoFactorChallengeService";
 
 class Container {
     loginService = new LoginService();
@@ -24,6 +26,8 @@ class Container {
     updatePasswordService = new UpdatePasswordService();
     updateProfileService = new UpdateProfileService();
     deleteAccountService = new DeleteAccountService();
+    twoFactorService = new TwoFactorService();
+    twoFactorChallengeService = new TwoFactorChallengeService();
 }
 
 export const container = new Container();

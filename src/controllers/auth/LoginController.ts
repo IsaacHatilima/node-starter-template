@@ -1,28 +1,22 @@
 import "dotenv/config";
 import {Request, Response} from "express";
 import {container} from "../../lib/container";
-import ms from "ms";
+import {setAuthCookies} from "../../lib/set-auth-cookies";
 
 export default async function LoginController(req: Request, res: Response) {
     try {
         const result = await container.loginService.login(req.body);
-        const isProduction = process.env.APP_ENV === "production";
-        const refreshMaxAge = ms((process.env.JWT_REFRESH_EXPIRES_IN ?? "7d") as ms.StringValue);
-        const accessMaxAge = ms((process.env.JWT_ACCESS_EXPIRES_IN ?? "120m") as ms.StringValue);
-
-        res.cookie("refresh_token", result.refresh_token, {
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? "strict" : "lax",
-            path: "/auth",
-            maxAge: refreshMaxAge,
-        });
-
-        res.cookie("access_token", result.access_token, {
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? "strict" : "lax",
-            maxAge: accessMaxAge,
+        if ((result as any).two_factor_required) {
+            return res.status(200).json({
+                message: "Two-factor authentication required",
+                two_factor_required: true,
+                challenge_id: (result as any).challenge_id,
+                user: (result as any).user,
+            });
+        }
+        setAuthCookies(res, {
+            access: result.access_token,
+            refresh: result.refresh_token,
         });
 
         return res.json({

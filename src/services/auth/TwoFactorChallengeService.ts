@@ -1,0 +1,63 @@
+import {redis} from "../../config/redis";
+import {prisma} from "../../config/db";
+import speakeasy from "speakeasy";
+import {generateAccessToken, generateRefreshToken} from "../../lib/jwt";
+import jwt, {JwtPayload} from "jsonwebtoken";
+
+export class TwoFactorChallengeService {
+    async verifyLoginCode(data: { challenge_id: string; code: string }) {
+        const cacheKey = `tfchal:${data.challenge_id}`;
+        const payload = await redis.get(cacheKey);
+        if (!payload) throw new Error("TFA_CHALLENGE_NOT_FOUND");
+        const {userId} = JSON.parse(payload) as { userId: string };
+
+        const user = await prisma.user.findUnique({where: {id: userId}});
+        if (!user || !user.two_factor_enabled) throw new Error("TFA_NOT_ENABLED");
+
+        let ok = false;
+        if (user.two_factor_secret) {
+            ok = speakeasy.totp.verify({
+                secret: user.two_factor_secret,
+                encoding: "base32",
+                token: data.code,
+                window: 1,
+            });
+        }
+        if (!ok) {
+            ok = (user.two_factor_recovery_codes ?? []).includes(data.code);
+        }
+        if (!ok) throw new Error("INVALID_TFA_TOKEN");
+
+        // Issue tokens now
+        const access_token = generateAccessToken({id: user.id, email: user.email});
+        const refresh_token = generateRefreshToken({id: user.id});
+
+        const decoded = jwt.decode(access_token) as JwtPayload & { jti?: string };
+        const jti = decoded.jti as string;
+
+        await prisma.refreshToken.create({
+            data: {
+                userId: user.id,
+                jti,
+                token: refresh_token,
+                expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000),
+            },
+        });
+
+        await redis
+            .multi()
+            .setEx(
+                `session:${jti}`,
+                60 * 5,
+                JSON.stringify({userId: user.id, jti})
+            )
+            .setEx(`user:${user.id}`, 60 * 5, JSON.stringify({...user, password: undefined}))
+            .del(cacheKey)
+            .exec();
+
+        const userSafe = {...user} as any;
+        delete userSafe.password;
+
+        return {user: userSafe, access_token, refresh_token};
+    }
+}

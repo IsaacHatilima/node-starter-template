@@ -24,7 +24,7 @@ provider = "sqlite"
 
 # Generate JWT_SECRET
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-
+[README.md](../../Laravel/peer-banking/README.md)
 # Run migrations and generate Prisma client
 npm run db:all
 
@@ -60,3 +60,8 @@ npm run test
 ## NOTE
 
 When switching from SQLite to PostgreSQL or vice versa, make sure to delete migration folder and generated folders.
+
+## Two-Factor QR Code
+
+The QR code can be shown by pasting ```data:image/png;base64,....```
+in the response from 2FA init route [here](https://base64.guru/converter/decode/image)

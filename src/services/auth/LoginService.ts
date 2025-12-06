@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import {generateAccessToken, generateRefreshToken} from "../../lib/jwt";
 import jwt, {JwtPayload} from "jsonwebtoken";
 import {redis} from "../../config/redis";
+import {v4 as uuidv4} from "uuid";
 
 export class LoginService {
     async login(data: {
@@ -22,6 +23,25 @@ export class LoginService {
 
         if (!valid) {
             throw new Error("INVALID_CREDENTIALS");
+        }
+
+        // Handle Two-Factor Authentication requirement
+        if ((user).two_factor_enabled) {
+            const challengeId = uuidv4();
+            await redis.setEx(
+                `tfchal:${challengeId}`,
+                60 * 5,
+                JSON.stringify({userId: user.id})
+            );
+
+            const userSafe = {...user} as any;
+            delete userSafe.password;
+
+            return {
+                two_factor_required: true,
+                challenge_id: challengeId,
+                user: userSafe,
+            } as any;
         }
 
         delete (user as any).password;
