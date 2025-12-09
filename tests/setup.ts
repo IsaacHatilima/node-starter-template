@@ -2,11 +2,12 @@ import {connectDB, disconnectDB, prisma} from "../src/config/db";
 import {initRedis} from "../src/config/redis";
 
 
-vi.mock("../src/lib/mail", () => ({
+vi.mock("../src/lib/mailer", () => ({
+    sendMail: vi.fn().mockResolvedValue(true),
+    buildEmailTemplate: vi.fn().mockReturnValue("<html></html>"),
     mailer: {
         sendMail: vi.fn().mockResolvedValue(true),
-    },
-    sendMail: vi.fn().mockResolvedValue(true),
+    }
 }));
 
 async function resetPostgresDatabase() {
