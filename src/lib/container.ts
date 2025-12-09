@@ -15,21 +15,43 @@ import {TwoFactorChallengeService} from "../services/auth/TwoFactorChallengeServ
 import {GoogleLoginService} from "../services/auth/GoogleLoginService";
 
 class Container {
-    loginService = new LoginService();
-    registerService = new RegisterService();
-    emailVerificationService = new EmailVerificationService();
-    meService = new MeService();
-    refreshTokenService = new RefreshTokenService();
-    logoutService = new LogoutService();
-    forgotPasswordService = new ForgotPasswordService();
-    forgotPasswordTokenCheckerService = new ForgotPasswordTokenCheckerService();
-    changePasswordService = new ChangePasswordService();
-    updatePasswordService = new UpdatePasswordService();
-    updateProfileService = new UpdateProfileService();
-    deleteAccountService = new DeleteAccountService();
-    twoFactorService = new TwoFactorService();
-    twoFactorChallengeService = new TwoFactorChallengeService();
-    googleLoginService = new GoogleLoginService();
+    public services = {
+        loginService: LoginService,
+        registerService: RegisterService,
+        emailVerificationService: EmailVerificationService,
+        meService: MeService,
+        refreshTokenService: RefreshTokenService,
+        logoutService: LogoutService,
+        forgotPasswordService: ForgotPasswordService,
+        forgotPasswordTokenCheckerService: ForgotPasswordTokenCheckerService,
+        changePasswordService: ChangePasswordService,
+        updatePasswordService: UpdatePasswordService,
+        updateProfileService: UpdateProfileService,
+        deleteAccountService: DeleteAccountService,
+        twoFactorService: TwoFactorService,
+        twoFactorChallengeService: TwoFactorChallengeService,
+        googleLoginService: GoogleLoginService,
+    } as const;
+    private singletons: Record<string, any> = {};
+    
+    [key: string]: any;
+
+    constructor() {
+        for (const [key, ServiceClass] of Object.entries(this.services)) {
+            Object.defineProperty(this, key, {
+                get: () => {
+                    if (!this.singletons[key]) {
+                        this.singletons[key] = new ServiceClass();
+                    }
+                    return this.singletons[key];
+                },
+                enumerable: true,
+            });
+        }
+    }
 }
 
 export const container = new Container();
+
+
+
