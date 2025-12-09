@@ -8,26 +8,76 @@
  *
  * components:
  *   schemas:
+ *
+ *     Profile:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           example: "6b83cb77-6c56-4338-9093-54fb3bdff9fe"
+ *         first_name:
+ *           type: string
+ *           example: "Jack"
+ *         last_name:
+ *           type: string
+ *           example: "Mwanza"
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-12-09T09:46:56.630Z"
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-12-09T09:46:56.630Z"
+ *         userId:
+ *           type: string
+ *           example: "d949e8e0-90a6-4030-957b-cb98ff2565a8"
+ *       required:
+ *         - id
+ *         - first_name
+ *         - last_name
+ *         - userId
+ *
  *     User:
  *       type: object
  *       properties:
  *         id:
  *           type: string
- *           example: "a1b2c3d4"
- *         first_name:
- *           type: string
- *           example: "Jane"
- *         last_name:
- *           type: string
- *           example: "Doe"
+ *           example: "d949e8e0-90a6-4030-957b-cb98ff2565a8"
  *         email:
  *           type: string
  *           format: email
- *           example: "jane@example.com"
- *         email_verified:
+ *           example: "test@mail.com"
+ *         email_verified_at:
+ *           type: string
+ *           nullable: true
+ *           format: date-time
+ *           example: null
+ *         last_login:
+ *           type: string
+ *           nullable: true
+ *           format: date-time
+ *           example: null
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-12-09T09:46:56.630Z"
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-12-09T09:46:56.630Z"
+ *         two_factor_enabled:
  *           type: boolean
  *           example: false
- *       required: [id, first_name, last_name, email]
+ *         profile:
+ *           $ref: '#/components/schemas/Profile'
+ *       required:
+ *         - id
+ *         - email
+ *         - created_at
+ *         - updated_at
+ *         - two_factor_enabled
+ *         - profile
  *
  *     AuthTokens:
  *       type: object
