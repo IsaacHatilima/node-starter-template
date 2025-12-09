@@ -1,8 +1,8 @@
 import request from "supertest";
-import {createApp} from "../../app";
-import {prisma} from "../../src/config/db";
+import {createApp} from "../../../app";
+import {prisma} from "../../../src/config/db";
 import bcrypt from "bcrypt";
-import {generateAccessToken, generateRefreshToken} from "../../src/lib/jwt";
+import {generateAccessToken, generateRefreshToken} from "../../../src/lib/jwt";
 import jwt, {JwtPayload} from "jsonwebtoken";
 
 const app = createApp();

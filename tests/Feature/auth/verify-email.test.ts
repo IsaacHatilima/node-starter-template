@@ -1,6 +1,6 @@
 import request from "supertest";
-import {createApp} from "../../app";
-import {prisma} from "../../src/config/db";
+import {createApp} from "../../../app";
+import {prisma} from "../../../src/config/db";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -12,7 +12,7 @@ describe("GET /auth/verify-email", () => {
         const hashedPassword = await bcrypt.hash("Password1#", 10);
         const user = await prisma.user.create({
             data: {
-                email: "verify_me@example.com",
+                email: "verify_1me@example.com",
                 password: hashedPassword,
                 profile: {
                     create: {
