@@ -60,7 +60,7 @@ jobs:
           echo "GOOGLE_CLIENT_SECRET=dummy" >> .env.test
 
       - name: Push Prisma schema to Test DB
-        run: dotenv -e .env.test -- npx prisma migrate deploy
+        run: npx dotenv -e .env.test -- npx prisma migrate deploy
 
       - name: Run Tests
-        run: dotenv -e .env.test -- npm run test
+        run: npx dotenv -e .env.test -- npm run test
