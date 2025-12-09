@@ -1,0 +1,66 @@
+name: Run Tests
+
+on:
+  pull_request:
+  push:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: node_starter_template
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create .env.test
+        run: |
+          echo "APP_NAME=Node" >> .env.test
+          echo "APP_ENV=test" >> .env.test
+          echo "APP_KEY=$(openssl rand -hex 32)" >> .env.test
+          echo "JWT_ACCESS_SECRET=$(openssl rand -hex 32)" >> .env.test
+          echo "JWT_REFRESH_SECRET=$(openssl rand -hex 32)" >> .env.test
+          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/node_starter_template?schema=test" >> .env.test
+          echo "REDIS_HOST=localhost" >> .env.test
+          echo "REDIS_PORT=6379" >> .env.test
+          echo "GOOGLE_CLIENT_ID=dummy" >> .env.test
+          echo "GOOGLE_CLIENT_SECRET=dummy" >> .env.test
+
+      - name: Push Prisma schema to Test DB
+        run: dotenv -e .env.test -- npx prisma migrate deploy
+
+      - name: Run Tests
+        run: dotenv -e .env.test -- npm run test
