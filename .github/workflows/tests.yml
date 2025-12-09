@@ -46,6 +46,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Create .env.development
+        run: |
+          echo "NODE_ENV=local" >> .env.development
+
       - name: Create .env.test
         run: |
           echo "APP_NAME=Node" >> .env.test
