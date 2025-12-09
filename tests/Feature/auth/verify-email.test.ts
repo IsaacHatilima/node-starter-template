@@ -2,6 +2,7 @@ import request from "supertest";
 import {createApp} from "../../../app";
 import {prisma} from "../../../src/config/db";
 import jwt from "jsonwebtoken";
+import {createPublicUser} from "../../test-helpers";
 import bcrypt from "bcrypt";
 
 const app = createApp();
@@ -9,19 +10,7 @@ const app = createApp();
 describe("GET /auth/verify-email", () => {
 
     it("verifies email successfully with a valid token", async () => {
-        const hashedPassword = await bcrypt.hash("Password1#", 10);
-        const user = await prisma.user.create({
-            data: {
-                email: "verify_1me@example.com",
-                password: hashedPassword,
-                profile: {
-                    create: {
-                        first_name: "Verify",
-                        last_name: "Me",
-                    },
-                },
-            },
-        });
+        const user = await createPublicUser();
 
         const token = jwt.sign(
             {id: user.id, email: user.email},

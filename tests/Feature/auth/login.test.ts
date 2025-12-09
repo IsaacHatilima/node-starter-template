@@ -2,30 +2,18 @@ import request from "supertest";
 import {createApp} from "../../../app";
 import {prisma} from "../../../src/config/db";
 import bcrypt from "bcrypt";
+import {createPublicUser} from "../../test-helpers";
 
 const app = createApp();
 
 describe("POST /auth/login", () => {
     it("user can login with valid credentials", async () => {
-        const hashedPassword = await bcrypt.hash("Password1#", 10);
-        const user = await prisma.user.create({
-            data: {
-                email: "logintest@example.com",
-                password: hashedPassword,
-                email_verified_at: new Date(),
-                profile: {
-                    create: {
-                        first_name: "Login",
-                        last_name: "Test",
-                    },
-                },
-            },
-        });
+        const user = await createPublicUser();
 
         const res = await request(app)
             .post("/auth/login")
             .send({
-                email: "logintest@example.com",
+                email: user.email,
                 password: "Password1#",
             });
 
@@ -49,24 +37,12 @@ describe("POST /auth/login", () => {
     });
 
     it("returns 404 for incorrect password", async () => {
-        const hashedPassword = await bcrypt.hash("Password1#", 10);
-        await prisma.user.create({
-            data: {
-                email: "wrongpass@example.com",
-                password: hashedPassword,
-                profile: {
-                    create: {
-                        first_name: "Wrong",
-                        last_name: "Pass",
-                    },
-                },
-            },
-        });
+        const user = await createPublicUser();
 
         const res = await request(app)
             .post("/auth/login")
             .send({
-                email: "wrongpass@example.com",
+                email: user.email,
                 password: "WrongPassword1#",
             });
 
@@ -76,7 +52,7 @@ describe("POST /auth/login", () => {
 
     it("returns 2FA challenge when two-factor is enabled", async () => {
         const hashedPassword = await bcrypt.hash("Password1#", 10);
-        await prisma.user.create({
+        const user = await prisma.user.create({
             data: {
                 email: "2fauser@example.com",
                 password: hashedPassword,
@@ -94,7 +70,7 @@ describe("POST /auth/login", () => {
         const res = await request(app)
             .post("/auth/login")
             .send({
-                email: "2fauser@example.com",
+                email: user.email,
                 password: "Password1#",
             });
 

@@ -3,24 +3,13 @@ import {createApp} from "../../../app";
 import {prisma} from "../../../src/config/db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import {createPublicUser} from "../../test-helpers";
 
 const app = createApp();
 
 describe("POST /auth/change-password", () => {
     it("changes password successfully with valid token", async () => {
-        const hashedPassword = await bcrypt.hash("OldPassword1#", 10);
-        const user = await prisma.user.create({
-            data: {
-                email: "changepass@example.com",
-                password: hashedPassword,
-                profile: {
-                    create: {
-                        first_name: "Change",
-                        last_name: "Pass",
-                    },
-                },
-            },
-        });
+        const user = await createPublicUser();
 
         const token = jwt.sign(
             {id: user.id, email: user.email},
@@ -71,19 +60,7 @@ describe("POST /auth/change-password", () => {
     });
 
     it("returns 422 when passwords do not match", async () => {
-        const hashedPassword = await bcrypt.hash("OldPassword1#", 10);
-        const user = await prisma.user.create({
-            data: {
-                email: "nomatch@example.com",
-                password: hashedPassword,
-                profile: {
-                    create: {
-                        first_name: "No",
-                        last_name: "Match",
-                    },
-                },
-            },
-        });
+        const user = await createPublicUser();
 
         const token = jwt.sign(
             {id: user.id, email: user.email},
@@ -110,19 +87,7 @@ describe("POST /auth/change-password", () => {
     });
 
     it("returns 422 for weak password", async () => {
-        const hashedPassword = await bcrypt.hash("OldPassword1#", 10);
-        const user = await prisma.user.create({
-            data: {
-                email: "weakpass@example.com",
-                password: hashedPassword,
-                profile: {
-                    create: {
-                        first_name: "Weak",
-                        last_name: "Pass",
-                    },
-                },
-            },
-        });
+        const user = await createPublicUser();
 
         const token = jwt.sign(
             {id: user.id, email: user.email},

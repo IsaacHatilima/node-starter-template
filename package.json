@@ -23,6 +23,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
     "@types/bcrypt": "^6.0.0",
     "@types/better-sqlite3": "^7.6.13",
     "@types/cookie-parser": "^1.4.10",

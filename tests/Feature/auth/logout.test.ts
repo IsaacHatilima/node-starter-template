@@ -1,27 +1,15 @@
 import request from "supertest";
 import {createApp} from "../../../app";
 import {prisma} from "../../../src/config/db";
-import bcrypt from "bcrypt";
 import {generateAccessToken, generateRefreshToken} from "../../../src/lib/jwt";
 import jwt, {JwtPayload} from "jsonwebtoken";
+import {createAuthUser, createPublicUser} from "../../test-helpers";
 
 const app = createApp();
 
 describe("POST /auth/logout", () => {
     it("user can logout successfully", async () => {
-        const hashedPassword = await bcrypt.hash("Password1#", 10);
-        const user = await prisma.user.create({
-            data: {
-                email: "logouttest@example.com",
-                password: hashedPassword,
-                profile: {
-                    create: {
-                        first_name: "Logout",
-                        last_name: "Test",
-                    },
-                },
-            },
-        });
+        const user = await createPublicUser();
 
         const access_token = generateAccessToken({
             id: user.id,
@@ -60,28 +48,11 @@ describe("POST /auth/logout", () => {
     });
 
     it("returns 200 when no refresh token provided", async () => {
-        const hashedPassword = await bcrypt.hash("Password1#", 10);
-        const user = await prisma.user.create({
-            data: {
-                email: "norefresh@example.com",
-                password: hashedPassword,
-                profile: {
-                    create: {
-                        first_name: "No",
-                        last_name: "Refresh",
-                    },
-                },
-            },
-        });
-
-        const access_token = generateAccessToken({
-            id: user.id,
-            email: user.email,
-        });
+        const createdData = await createAuthUser();
 
         const res = await request(app)
             .post("/auth/logout")
-            .set("Cookie", `access_token=${access_token}`);
+            .set("Cookie", `access_token=${createdData.access_token}`);
 
         expect(res.status).toBe(200);
         expect(res.body.message).toBe("Logged out");

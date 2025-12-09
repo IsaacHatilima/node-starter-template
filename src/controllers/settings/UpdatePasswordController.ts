@@ -14,7 +14,7 @@ const passwordUpdateSchema = z.object({
 
     password_confirm: z.string(),
 }).refine((data) => data.password === data.password_confirm, {
-    message: "Passwords do not match",
+    message: "Passwords do not match.",
     path: ["password_confirm"],
 });
 
@@ -41,12 +41,6 @@ export default async function UpdatePasswordController(req: Request, res: Respon
 
         if (msg === "INVALID_PASSWORD")
             return res.status(400).json({errors: ["Invalid Password."]});
-
-        if (msg === "PASSWORDS_DONT_MATCH")
-            return res.status(404).json({errors: ["Passwords do not match."]});
-
-        if (msg === "FAILED_TO_CHANGE_PASSWORD")
-            return res.status(400).json({errors: ["Password update failed."]});
 
         return res.status(500).json({error: "Something went wrong."});
     }

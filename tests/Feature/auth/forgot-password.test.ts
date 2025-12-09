@@ -1,30 +1,18 @@
 import request from "supertest";
 import {createApp} from "../../../app";
 import {prisma} from "../../../src/config/db";
-import bcrypt from "bcrypt";
+import {createPublicUser} from "../../test-helpers";
 
 const app = createApp();
 
 describe("POST /auth/forgot-password", () => {
     it("sends reset link for valid email", async () => {
-        const hashedPassword = await bcrypt.hash("Password1#", 10);
-        await prisma.user.create({
-            data: {
-                email: "forgot@example.com",
-                password: hashedPassword,
-                profile: {
-                    create: {
-                        first_name: "Forgot",
-                        last_name: "Password",
-                    },
-                },
-            },
-        });
+        const user = await createPublicUser();
 
         const res = await request(app)
             .post("/auth/forgot-password")
             .send({
-                email: "forgot@example.com",
+                email: user.email,
             });
 
         expect(res.status).toBe(200);
@@ -33,7 +21,7 @@ describe("POST /auth/forgot-password", () => {
         const resetToken = await prisma.passwordResetToken.findFirst({
             where: {
                 user: {
-                    email: "forgot@example.com",
+                    email: user.email,
                 },
             },
         });

@@ -1,39 +1,21 @@
 import request from "supertest";
 import {createApp} from "../../../app";
-import {prisma} from "../../../src/config/db";
-import bcrypt from "bcrypt";
 import {generateAccessToken} from "../../../src/lib/jwt";
+import {createAuthUser} from "../../test-helpers";
 
 const app = createApp();
 
 describe("GET /auth/me", () => {
     it("returns authenticated user data", async () => {
-        const hashedPassword = await bcrypt.hash("Password1#", 10);
-        const user = await prisma.user.create({
-            data: {
-                email: "metest@example.com",
-                password: hashedPassword,
-                profile: {
-                    create: {
-                        first_name: "Me",
-                        last_name: "Test",
-                    },
-                },
-            },
-        });
-
-        const access_token = generateAccessToken({
-            id: user.id,
-            email: user.email,
-        });
+        const created = await createAuthUser();
 
         const res = await request(app)
             .get("/auth/me")
-            .set("Cookie", `access_token=${access_token}`);
+            .set("Cookie", `access_token=${created.access_token}`);
 
         expect(res.status).toBe(200);
         expect(res.body.user).toBeDefined();
-        expect(res.body.user.email).toBe("metest@example.com");
+        expect(res.body.user.email).toBe(created.user.email);
         expect(res.body.user.profile.first_name).toBe("Me");
     });
 

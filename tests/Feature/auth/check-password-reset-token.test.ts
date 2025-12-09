@@ -1,26 +1,14 @@
 import request from "supertest";
 import {createApp} from "../../../app";
 import {prisma} from "../../../src/config/db";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import {createPublicUser} from "../../test-helpers";
 
 const app = createApp();
 
 describe("GET /auth/check-password-reset-token", () => {
     it("validates token successfully", async () => {
-        const hashedPassword = await bcrypt.hash("Password1#", 10);
-        const user = await prisma.user.create({
-            data: {
-                email: "tokencheck@example.com",
-                password: hashedPassword,
-                profile: {
-                    create: {
-                        first_name: "Token",
-                        last_name: "Check",
-                    },
-                },
-            },
-        });
+        const user = await createPublicUser();
 
         const token = jwt.sign(
             {id: user.id, email: user.email},
@@ -59,19 +47,7 @@ describe("GET /auth/check-password-reset-token", () => {
     });
 
     it("returns 404 for token not in database", async () => {
-        const hashedPassword = await bcrypt.hash("Password1#", 10);
-        const user = await prisma.user.create({
-            data: {
-                email: "notindb@example.com",
-                password: hashedPassword,
-                profile: {
-                    create: {
-                        first_name: "Not",
-                        last_name: "InDB",
-                    },
-                },
-            },
-        });
+        const user = await createPublicUser();
 
         const token = jwt.sign(
             {id: user.id, email: user.email},
