@@ -1,10 +1,10 @@
 import request from "supertest";
-import {createApp} from "../../../app";
-import {prisma} from "../../../src/config/db";
+import {createApp} from "../../../app.js";
+import {prisma} from "../../../src/config/db.js";
 import bcrypt from "bcrypt";
-import {generateAccessToken, generateRefreshToken} from "../../../src/lib/jwt";
+import {generateAccessToken, generateRefreshToken} from "../../../src/lib/jwt.js";
 import jwt, {JwtPayload} from "jsonwebtoken";
-import {createAuthUser} from "../../test-helpers";
+import {createAuthUser} from "../../test-helpers.js";
 
 const app = createApp();
 

@@ -1,7 +1,7 @@
-import {prisma} from "../src/config/db";
+import {prisma} from "../src/config/db.js";
 import bcrypt from "bcrypt";
-import {generateAccessToken} from "../src/lib/jwt";
-import {User} from "../src/generated/prisma/client";
+import {generateAccessToken} from "../src/lib/jwt.js";
+import {User} from "../src/generated/prisma/client.js";
 import {faker} from "@faker-js/faker";
 
 export async function createAuthUser(): Promise<{ user: User; access_token: string }> {

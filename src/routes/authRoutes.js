@@ -1,17 +1,17 @@
 import { Router } from "express";
-import RegisterController from "@/controllers/auth/RegisterController";
-import LoginController from "@/controllers/auth/LoginController";
-import MeController from "@/controllers/auth/MeController";
-import { AuthMiddleware } from "@/middleware/authMiddleware";
-import { AuthLimiter } from "@/middleware/rateLimiter";
-import VerifyEmailController from "@/controllers/auth/VerifyEmailController";
-import RefreshTokenController from "@/controllers/auth/RefreshTokenController";
-import LogoutController from "@/controllers/auth/LogoutController";
-import ForgotPasswordController from "@/controllers/auth/ForgotPasswordController";
-import ForgotPasswordTokenCheckerController from "@/controllers/auth/ForgotPasswordTokenCheckerController";
-import ChangePasswordController from "@/controllers/auth/ChangePasswordController";
-import { TwoFactorChallengeController } from "@/controllers/auth/TwoFactorChallengeController";
-import GoogleLoginController from "@/controllers/auth/GoogleLoginController";
+import RegisterController from "../controllers/auth/RegisterController.js";
+import LoginController from "../controllers/auth/LoginController.js";
+import MeController from "../controllers/auth/MeController.js";
+import { AuthMiddleware } from "../middleware/authMiddleware.js";
+import { AuthLimiter } from "../middleware/rateLimiter.js";
+import VerifyEmailController from "../controllers/auth/VerifyEmailController.js";
+import RefreshTokenController from "../controllers/auth/RefreshTokenController.js";
+import LogoutController from "../controllers/auth/LogoutController.js";
+import ForgotPasswordController from "../controllers/auth/ForgotPasswordController.js";
+import ForgotPasswordTokenCheckerController from "../controllers/auth/ForgotPasswordTokenCheckerController.js";
+import ChangePasswordController from "../controllers/auth/ChangePasswordController.js";
+import { TwoFactorChallengeController } from "../controllers/auth/TwoFactorChallengeController.js";
+import GoogleLoginController from "../controllers/auth/GoogleLoginController.js";
 const router = Router();
 /**
  * @openapi

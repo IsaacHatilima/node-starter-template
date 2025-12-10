@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { AuthMiddleware } from "@/middleware/authMiddleware";
-import UpdatePasswordController from "@/controllers/settings/UpdatePasswordController";
-import UpdateProfileController from "@/controllers/settings/UpdateProfileController";
-import DeleteAccountController from "@/controllers/settings/DeleteAccountController";
-import { TwoFADisableController, TwoFAEnableController, TwoFARegenerateCodesController, TwoFASetupController } from "@/controllers/settings/TwoFactorController";
+import { AuthMiddleware } from "../middleware/authMiddleware.js";
+import UpdatePasswordController from "../controllers/settings/UpdatePasswordController.js";
+import UpdateProfileController from "../controllers/settings/UpdateProfileController.js";
+import DeleteAccountController from "../controllers/settings/DeleteAccountController.js";
+import { TwoFADisableController, TwoFAEnableController, TwoFARegenerateCodesController, TwoFASetupController } from "../controllers/settings/TwoFactorController.js";
 const router = Router();
 /**
  * @openapi

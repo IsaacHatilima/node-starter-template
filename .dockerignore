@@ -1,0 +1,14 @@
+# Dependencies
+node_modules
+
+# Dev stuff
+.env
+.env.test
+.idea
+npm-debug.log
+.vscode
+.DS_Store
+
+# Tests
+coverage
+tests

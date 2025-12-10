@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { container } from "@/lib/container";
+import { container } from "../../lib/container.js";
 const deleteProfileSchema = z.object({
     password: z.string(),
 });

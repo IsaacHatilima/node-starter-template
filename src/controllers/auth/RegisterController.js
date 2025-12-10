@@ -1,5 +1,6 @@
-import { z } from "zod";
-import { container } from "@/lib/container";
+import {z} from "zod";
+import {container} from "../../lib/container.js";
+
 const registerSchema = z.object({
     first_name: z.string().min(2),
     last_name: z.string().min(2),
@@ -29,13 +30,13 @@ export default async function RegisterController(req, res) {
             message: "Registered successfully.",
             user,
         });
-    }
-    catch (error) {
+    } catch (error) {
         if (error.message === "EMAIL_TAKEN") {
             return res.status(400).json({
                 errors: ["Email is already in use"],
             });
         }
+        console.log(error);
         return res.status(500).json({
             error: "Something went wrong",
         });

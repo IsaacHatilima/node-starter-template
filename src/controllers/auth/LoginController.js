@@ -1,6 +1,6 @@
 import "dotenv/config";
-import { container } from "@/lib/container";
-import { setAuthCookies } from "@/lib/set-auth-cookies";
+import { container } from "../../lib/container.js";
+import { setAuthCookies } from "../../lib/set-auth-cookies.js";
 export default async function LoginController(req, res) {
     try {
         const result = await container.loginService.login(req.body);

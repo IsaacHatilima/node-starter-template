@@ -1,5 +1,5 @@
-import { prisma } from "@/config/db";
-import { redis } from "@/config/redis";
+import { prisma } from "../../config/db.js";
+import { redis } from "../../config/redis.js";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
 import { v4 as uuidv4 } from "uuid";

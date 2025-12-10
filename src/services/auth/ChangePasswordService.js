@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { prisma } from "@/config/db";
+import { prisma } from "../../config/db.js";
 export class ChangePasswordService {
     async changePassword(data) {
         const passwordToken = await prisma.passwordResetToken.findUnique({

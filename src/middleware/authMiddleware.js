@@ -1,17 +1,17 @@
 import jwt from "jsonwebtoken";
-import { redis } from "@/config/redis";
-import { prisma } from "@/config/db";
-import { toSafeUser } from "@/lib/safe-user";
+import {redis} from "../config/redis.js";
+import {prisma} from "../config/db.js";
+import {toSafeUser} from "../lib/safe-user.js";
+
 export async function AuthMiddleware(req, res, next) {
     let token;
     if (req.headers.authorization?.startsWith("Bearer ")) {
         token = req.headers.authorization.split(" ")[1];
-    }
-    else if (req.cookies?.access_token) {
+    } else if (req.cookies?.access_token) {
         token = req.cookies.access_token;
     }
     if (!token) {
-        return res.status(401).json({ errors: ["Unauthorized"] });
+        return res.status(401).json({errors: ["Unauthorized"]});
     }
     try {
         const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
@@ -26,7 +26,7 @@ export async function AuthMiddleware(req, res, next) {
                     }
                 });
                 if (revoked) {
-                    return res.status(401).json({ errors: ["Token expired"] });
+                    return res.status(401).json({errors: ["Token expired"]});
                 }
                 await redis.setEx(sessionKey, 60 * 5, JSON.stringify({
                     userId: decoded.id,
@@ -39,21 +39,19 @@ export async function AuthMiddleware(req, res, next) {
         let user;
         if (cachedUser) {
             user = JSON.parse(cachedUser);
-        }
-        else {
+        } else {
             user = await prisma.user.findUnique({
-                where: { id: decoded.id },
-                include: { profile: true },
+                where: {id: decoded.id},
+                include: {profile: true},
             });
             if (!user) {
-                return res.status(401).json({ errors: ["Invalid or expired token"] });
+                return res.status(401).json({errors: ["Invalid or expired token"]});
             }
             await redis.setEx(userCacheKey, 60 * 5, JSON.stringify(toSafeUser(user)));
         }
         req.user = user;
         next();
-    }
-    catch (error) {
-        return res.status(401).json({ errors: ["Invalid or expired session"] });
+    } catch (error) {
+        return res.status(401).json({errors: ["Invalid or expired session"]});
     }
 }

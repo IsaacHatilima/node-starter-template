@@ -1,5 +1,5 @@
-import { prisma } from "@/config/db";
-import { redis } from "@/config/redis";
+import { prisma } from "../../config/db.js";
+import { redis } from "../../config/redis.js";
 export class LogoutService {
     async logout(refreshToken) {
         const stored = await prisma.refreshToken.findUnique({

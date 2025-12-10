@@ -1,10 +1,10 @@
-import { prisma } from "@/config/db";
+import { prisma } from "../../config/db.js";
 import bcrypt from "bcrypt";
-import { generateAccessToken, generateRefreshToken } from "@/lib/jwt";
+import { generateAccessToken, generateRefreshToken } from "../../lib/jwt.js";
 import jwt from "jsonwebtoken";
-import { redis } from "@/config/redis";
+import { redis } from "../../config/redis.js";
 import { v4 as uuidv4 } from "uuid";
-import { toSafeUser } from "@/lib/safe-user";
+import { toSafeUser } from "../../lib/safe-user.js";
 export class LoginService {
     async login(data) {
         const user = await prisma.user.findUnique({

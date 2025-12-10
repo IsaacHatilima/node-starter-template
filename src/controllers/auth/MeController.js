@@ -1,4 +1,4 @@
-import { container } from "@/lib/container";
+import { container } from "../../lib/container.js";
 export default async function MeController(req, res) {
     try {
         const user = await container.meService.getMe(req.user.id);

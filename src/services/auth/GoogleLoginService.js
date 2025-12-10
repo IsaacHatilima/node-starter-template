@@ -1,9 +1,9 @@
 import { OAuth2Client } from "google-auth-library";
-import { prisma } from "@/config/db";
-import { redis } from "@/config/redis";
+import { prisma } from "../../config/db.js";
+import { redis } from "../../config/redis.js";
 import { v4 as uuidv4 } from "uuid";
-import { generateAuthToken } from "@/lib/auth-token-generator";
-import { toSafeUser } from "@/lib/safe-user";
+import { generateAuthToken } from "../../lib/auth-token-generator.js";
+import { toSafeUser } from "../../lib/safe-user.js";
 export class GoogleLoginService {
     client;
     constructor() {

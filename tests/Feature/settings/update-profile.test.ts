@@ -1,6 +1,6 @@
 import request from "supertest";
-import {createApp} from "../../../app";
-import {createAuthUser} from "../../test-helpers";
+import {createApp} from "../../../app.js";
+import {createAuthUser} from "../../test-helpers.js";
 
 const app = createApp();
 

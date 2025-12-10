@@ -1,4 +1,4 @@
-import { container } from "@/lib/container";
+import { container } from "../../lib/container.js";
 export default async function ForgotPasswordTokenCheckerController(req, res) {
     const token = req.query.token;
     if (!token) {

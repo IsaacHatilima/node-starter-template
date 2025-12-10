@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { container } from "@/lib/container";
+import { container } from "../../lib/container.js";
 const profileUpdateSchema = z.object({
     first_name: z.string().min(2),
     last_name: z.string().min(2),

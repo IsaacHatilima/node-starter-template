@@ -1,4 +1,4 @@
-import { container } from "@/lib/container";
+import { container } from "../../lib/container.js";
 export async function TwoFASetupController(req, res) {
     try {
         const result = await container.twoFactorService.initiateSetup(req.user);

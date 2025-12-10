@@ -1,8 +1,8 @@
-import { redis } from "@/config/redis";
-import { prisma } from "@/config/db";
+import { redis } from "../../config/redis.js";
+import { prisma } from "../../config/db.js";
 import speakeasy from "speakeasy";
-import { generateAuthToken } from "@/lib/auth-token-generator";
-import { toSafeUser } from "@/lib/safe-user";
+import { generateAuthToken } from "../../lib/auth-token-generator.js";
+import { toSafeUser } from "../../lib/safe-user.js";
 export class TwoFactorChallengeService {
     async verifyLoginCode(data) {
         const cacheKey = `tfchal:${data.challenge_id}`;

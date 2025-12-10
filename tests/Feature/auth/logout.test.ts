@@ -1,9 +1,9 @@
 import request from "supertest";
-import {createApp} from "../../../app";
-import {prisma} from "../../../src/config/db";
-import {generateAccessToken, generateRefreshToken} from "../../../src/lib/jwt";
+import {createApp} from "../../../app.js";
+import {prisma} from "../../../src/config/db.js";
+import {generateAccessToken, generateRefreshToken} from "../../../src/lib/jwt.js";
 import jwt, {JwtPayload} from "jsonwebtoken";
-import {createAuthUser, createPublicUser} from "../../test-helpers";
+import {createAuthUser, createPublicUser} from "../../test-helpers.js";
 
 const app = createApp();
 

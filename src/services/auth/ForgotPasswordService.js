@@ -1,7 +1,7 @@
 import "dotenv/config";
-import { prisma } from "@/config/db";
-import { container } from "@/lib/container";
-import { buildEmailTemplate, sendMail } from "@/lib/mailer";
+import { prisma } from "../../config/db.js";
+import { container } from "../../lib/container.js";
+import { buildEmailTemplate, sendMail } from "../../lib/mailer.js";
 export class ForgotPasswordService {
     async requestLink(data) {
         const user = await prisma.user.findFirst({

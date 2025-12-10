@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { container } from "@/lib/container";
+import { container } from "../../lib/container.js";
 import ms from "ms";
 export default async function RefreshTokenController(req, res) {
     try {

@@ -1,7 +1,7 @@
 import request from "supertest";
-import {createApp} from "../../../app";
-import {prisma} from "../../../src/config/db";
-import {createPublicUser} from "../../test-helpers";
+import {createApp} from "../../../app.js";
+import {prisma} from "../../../src/config/db.js";
+import {createPublicUser} from "../../test-helpers.js";
 
 const app = createApp();
 

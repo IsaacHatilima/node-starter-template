@@ -1,6 +1,6 @@
 import "dotenv/config";
-import { container } from "@/lib/container";
-import { setAuthCookies } from "@/lib/set-auth-cookies";
+import { container } from "../../lib/container.js";
+import { setAuthCookies } from "../../lib/set-auth-cookies.js";
 export default async function GoogleLoginController(req, res) {
     try {
         const { id_token } = req.body;

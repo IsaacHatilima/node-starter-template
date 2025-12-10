@@ -3,6 +3,7 @@ node_modules
 .env.development
 .env.test
 .idea
+/dist
 .node_modules
 /src/generated/*
 /prisma/*.db

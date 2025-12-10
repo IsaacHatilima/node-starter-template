@@ -1,6 +1,6 @@
-import { prisma } from "@/config/db";
+import { prisma } from "../../config/db.js";
 import bcrypt from "bcrypt";
-import { redis } from "@/config/redis";
+import { redis } from "../../config/redis.js";
 export class DeleteAccountService {
     async deleteAccount(data, reqUser) {
         const user = await prisma.user.findFirst({

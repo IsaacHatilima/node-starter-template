@@ -1,6 +1,6 @@
-import { container } from "@/lib/container";
-import { setAuthCookies } from "@/lib/set-auth-cookies";
-import { prisma } from "@/config/db";
+import { container } from "../../lib/container.js";
+import { setAuthCookies } from "../../lib/set-auth-cookies.js";
+import { prisma } from "../../config/db.js";
 export async function TwoFactorChallengeController(req, res) {
     try {
         const { challenge_id, code } = req.body;

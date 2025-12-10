@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { container } from "@/lib/container";
+import { container } from "../../lib/container.js";
 export default async function LogoutController(req, res) {
     const refreshToken = req.cookies?.refresh_token;
     const isProduction = process.env.NODE_ENV === "production";

@@ -29,10 +29,10 @@ export function setupSwagger(app) {
             ],
         },
         apis: [
-            "./src/routes/**/*.ts",
-            "./src/controllers/**/*.ts",
-            "./src/docs/**/*.ts",
-            "./app.ts",
+            "./src/routes/**/*.js",
+            "./src/controllers/**/*.js",
+            "./src/docs/**/*.js",
+            "./app.js",
         ],
     };
     const spec = swaggerJsdoc(options);

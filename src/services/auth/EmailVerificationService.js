@@ -1,6 +1,6 @@
 import "dotenv/config";
 import jwt from "jsonwebtoken";
-import { prisma } from "@/config/db";
+import { prisma } from "../../config/db.js";
 export class EmailVerificationService {
     generateVerificationToken(userId, email) {
         return jwt.sign({ id: userId, email }, process.env.APP_KEY, { expiresIn: "1h" });

@@ -1,7 +1,7 @@
-import { prisma } from "@/config/db";
-import { redis } from "@/config/redis";
+import { prisma } from "../../config/db.js";
+import { redis } from "../../config/redis.js";
 import jwt from "jsonwebtoken";
-import { generateAccessToken, generateRefreshToken } from "@/lib/jwt";
+import { generateAccessToken, generateRefreshToken } from "../../lib/jwt.js";
 export class RefreshTokenService {
     async refresh(refreshToken) {
         const stored = await prisma.refreshToken.findUnique({

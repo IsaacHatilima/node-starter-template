@@ -1,0 +1,28 @@
+import { connectDB, disconnectDB, prisma } from "../src/config/db.js";
+import { initRedis } from "../src/config/redis.js";
+vi.mock("../src/lib/mailer", () => ({
+    sendMail: vi.fn().mockResolvedValue(true),
+    buildEmailTemplate: vi.fn().mockReturnValue("<html></html>"),
+    mailer: {
+        sendMail: vi.fn().mockResolvedValue(true),
+    }
+}));
+async function resetPostgresDatabase() {
+    const tables = await prisma.$queryRaw `
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'test'
+          AND table_name != '_prisma_migrations';
+    `;
+    for (const { table_name } of tables) {
+        await prisma.$executeRawUnsafe(`TRUNCATE TABLE "test"."${table_name}" RESTART IDENTITY CASCADE;`);
+    }
+}
+beforeAll(async () => {
+    await connectDB();
+    await initRedis();
+    await resetPostgresDatabase();
+});
+afterAll(async () => {
+    await disconnectDB();
+});

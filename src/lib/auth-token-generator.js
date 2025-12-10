@@ -1,6 +1,6 @@
-import { generateAccessToken, generateRefreshToken } from "./jwt";
+import { generateAccessToken, generateRefreshToken } from "./jwt.js";
 import jwt from "jsonwebtoken";
-import { prisma } from "@/config/db";
+import { prisma } from "../config/db.js";
 export async function generateAuthToken({ id, email }) {
     const access_token = generateAccessToken({ id: id, email: email });
     const refresh_token = generateRefreshToken({ id: id });

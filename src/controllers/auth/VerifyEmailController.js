@@ -1,4 +1,4 @@
-import { container } from "@/lib/container";
+import { container } from "../../lib/container.js";
 export default async function VerifyEmailController(req, res) {
     try {
         const { token } = req.query;

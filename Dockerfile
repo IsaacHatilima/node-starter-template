@@ -1,45 +1,30 @@
-# ---------- BUILD STAGE ----------
-FROM node:20-alpine AS builder
+# ---------- Single-Stage Dockerfile (Robust for Prisma Testing) ----------
+FROM node:20-alpine
 
 WORKDIR /app
 
+# 1. Copy essential configuration files first
+# Assuming schema.prisma is inside 'prisma' directory
 COPY package*.json ./
+COPY prisma ./prisma
+COPY prisma.config.ts ./
+# Copy other config files like tsconfig.json, etc. if needed for generate/runtime
+
+# 2. Install dependencies (Prisma CLI, adapters, etc.)
 RUN npm install
 
+# 3. Copy ALL your application source code
+# This step is critical and MUST happen before generate, but after install.
 COPY . .
 
-# Generate the Prisma client into src/generated/prisma
+# 4. CRITICAL: Generate the Prisma Client
+# This creates /app/src/generated/prisma/client.js
 RUN npx prisma generate
 
-# Build TS → JS
 RUN npm run build
 
-# Copy generated Prisma client into dist so runtime alias imports resolve
-RUN mkdir -p dist/src/generated && cp -r src/generated/prisma dist/src/generated/prisma
-
-
-# ---------- RUNTIME STAGE ----------
-FROM node:20-alpine AS runner
-LABEL authors="isaachatilima"
-
-WORKDIR /app
-
-# Use the exact dependencies from the builder (includes prisma CLI for migrations)
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-
-# Copy compiled JS
-COPY --from=builder /app/dist ./dist
-
-# Copy Prisma client exactly where your app expects it
-COPY --from=builder /app/src/generated/prisma ./src/generated/prisma
-COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
-
-# Copy migrations (needed for migrate deploy)
-COPY --from=builder /app/prisma ./prisma
-
-ENV NODE_ENV=production
 
 EXPOSE 3000
 
-CMD ["node", "-r", "tsconfig-paths/register", "dist/server.js"]
+# Run the entry file
+CMD [ "node", "dist/server.js" ]
