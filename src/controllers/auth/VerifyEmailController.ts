@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {container} from "../../lib/container";
+import {container} from "@/lib/container";
 
 export default async function VerifyEmailController(req: Request, res: Response) {
     try {
@@ -26,7 +26,7 @@ export default async function VerifyEmailController(req: Request, res: Response)
 
         if (msg === "USER_NOT_FOUND")
             return res.status(404).json({errors: ["User not found"]});
-        
+
         return res.status(500).json({error: "Something went wrong"});
     }
 }

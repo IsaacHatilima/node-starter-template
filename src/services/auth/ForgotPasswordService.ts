@@ -1,7 +1,7 @@
 import "dotenv/config";
-import {prisma} from "../../config/db";
-import {container} from "../../lib/container";
-import {buildEmailTemplate, sendMail} from "../../lib/mailer";
+import {prisma} from "@/config/db";
+import {container} from "@/lib/container";
+import {buildEmailTemplate, sendMail} from "@/lib/mailer";
 
 export class ForgotPasswordService {
     async requestLink(data: {

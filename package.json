@@ -51,6 +51,7 @@
   },
   "type": "module",
   "scripts": {
+    "build": "tsc",
     "dev": "dotenv -e .env.development -- nodemon",
     "start": "tsx server.ts",
     "db:migrate": "dotenv -e .env.development -- npx prisma migrate dev",

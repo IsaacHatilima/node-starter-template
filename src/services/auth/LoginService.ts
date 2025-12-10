@@ -1,10 +1,10 @@
-import {prisma} from "../../config/db";
+import {prisma} from "@/config/db";
 import bcrypt from "bcrypt";
-import {generateAccessToken, generateRefreshToken} from "../../lib/jwt";
+import {generateAccessToken, generateRefreshToken} from "@/lib/jwt";
 import jwt, {JwtPayload} from "jsonwebtoken";
-import {redis} from "../../config/redis";
+import {redis} from "@/config/redis";
 import {v4 as uuidv4} from "uuid";
-import {toSafeUser} from "../../lib/safe-user";
+import {toSafeUser} from "@/lib/safe-user";
 
 export class LoginService {
     async login(data: {

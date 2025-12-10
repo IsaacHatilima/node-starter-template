@@ -23,10 +23,10 @@ export function generateAccessToken(payload: JwtPayload) {
         {expiresIn: accessExpires});
 }
 
-export function generateRefreshToken(payload: JwtPayload) {
+export function generateRefreshToken({id}: { id: string; }) {
     return jwt.sign(
         {
-            ...payload,
+            id,
             jti: randomUUID(),
         },
         refreshSecret,

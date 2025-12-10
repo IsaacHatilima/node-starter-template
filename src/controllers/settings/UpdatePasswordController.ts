@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {z} from "zod";
-import {container} from "../../lib/container";
+import {container} from "@/lib/container";
 
 const passwordUpdateSchema = z.object({
     current_password: z.string(),

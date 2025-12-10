@@ -1,8 +1,8 @@
 import {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
-import {redis} from "../config/redis";
-import {prisma} from "../config/db";
-import {toSafeUser} from "../lib/safe-user";
+import {redis} from "@/config/redis";
+import {prisma} from "@/config/db";
+import {toSafeUser} from "@/lib/safe-user";
 
 export async function AuthMiddleware(
     req: Request,

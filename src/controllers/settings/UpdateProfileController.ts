@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {container} from "../../lib/container";
+import {container} from "@/lib/container";
 import {Request, Response} from "express";
 
 const profileUpdateSchema = z.object({
@@ -31,7 +31,7 @@ export default async function UpdateProfileController(req: Request, res: Respons
 
         if (msg === "USER_NOT_FOUND")
             return res.status(400).json({errors: ["User not found."]});
-        
+
         if (msg === "FAILED_TO_UPDATE_PROFILE")
             return res.status(400).json({errors: ["Profile update failed. Try again."]});
 

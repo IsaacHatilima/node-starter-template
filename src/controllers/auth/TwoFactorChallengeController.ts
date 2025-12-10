@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
-import {container} from "../../lib/container";
-import {setAuthCookies} from "../../lib/set-auth-cookies";
-import {prisma} from "../../config/db";
+import {container} from "@/lib/container";
+import {setAuthCookies} from "@/lib/set-auth-cookies";
+import {prisma} from "@/config/db";
 
 export async function TwoFactorChallengeController(req: Request, res: Response) {
     try {

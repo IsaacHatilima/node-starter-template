@@ -1,6 +1,6 @@
-import {prisma} from "../../config/db";
+import {prisma} from "@/config/db";
 import bcrypt from "bcrypt";
-import {redis} from "../../config/redis";
+import {redis} from "@/config/redis";
 
 export class DeleteAccountService {
     async deleteAccount(data: {

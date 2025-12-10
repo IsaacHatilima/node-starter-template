@@ -1,6 +1,6 @@
 import "dotenv/config";
 import {Request, Response} from "express";
-import {container} from "../../lib/container";
+import {container} from "@/lib/container";
 import ms from "ms";
 
 export default async function RefreshTokenController(req: Request, res: Response) {

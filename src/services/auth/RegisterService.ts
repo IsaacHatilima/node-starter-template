@@ -1,10 +1,10 @@
 import "dotenv/config";
-import {prisma} from "../../config/db";
+import {prisma} from "@/config/db";
 import bcrypt from "bcrypt";
-import {normalizeEmail, normalizeName} from "../../utils/string";
-import {container} from "../../lib/container";
-import {buildEmailTemplate, sendMail} from "../../lib/mailer";
-import {toSafeUser} from "../../lib/safe-user";
+import {normalizeEmail, normalizeName} from "@/utils/string";
+import {container} from "@/lib/container";
+import {buildEmailTemplate, sendMail} from "@/lib/mailer";
+import {toSafeUser} from "@/lib/safe-user";
 
 export class RegisterService {
     async register(data: {

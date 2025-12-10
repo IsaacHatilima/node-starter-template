@@ -1,7 +1,7 @@
-import {prisma} from "../../config/db";
-import {redis} from "../../config/redis";
+import {prisma} from "@/config/db";
+import {redis} from "@/config/redis";
 import jwt from "jsonwebtoken";
-import {generateAccessToken, generateRefreshToken} from "../../lib/jwt";
+import {generateAccessToken, generateRefreshToken} from "@/lib/jwt";
 
 export class RefreshTokenService {
     async refresh(refreshToken: string) {
@@ -25,7 +25,6 @@ export class RefreshTokenService {
 
         const newRefresh = generateRefreshToken({
             id: decoded.id,
-            email: decoded.email
         });
 
         const newAccess = generateAccessToken({

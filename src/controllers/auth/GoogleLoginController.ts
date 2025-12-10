@@ -1,7 +1,7 @@
 import "dotenv/config";
 import {Request, Response} from "express";
-import {container} from "../../lib/container";
-import {setAuthCookies} from "../../lib/set-auth-cookies";
+import {container} from "@/lib/container";
+import {setAuthCookies} from "@/lib/set-auth-cookies";
 
 export default async function GoogleLoginController(req: Request, res: Response) {
     try {

@@ -1,8 +1,8 @@
-import {redis} from "../../config/redis";
-import {prisma} from "../../config/db";
+import {redis} from "@/config/redis";
+import {prisma} from "@/config/db";
 import speakeasy from "speakeasy";
-import {generateAuthToken} from "../../lib/auth-token-generator";
-import {toSafeUser} from "../../lib/safe-user";
+import {generateAuthToken} from "@/lib/auth-token-generator";
+import {toSafeUser} from "@/lib/safe-user";
 
 export class TwoFactorChallengeService {
     async verifyLoginCode(data: { challenge_id: string; code: string }) {

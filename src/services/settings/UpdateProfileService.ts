@@ -1,7 +1,7 @@
-import {prisma} from "../../config/db";
-import {normalizeEmail, normalizeName} from "../../utils/string";
-import {redis} from "../../config/redis";
-import {toSafeUser} from "../../lib/safe-user";
+import {prisma} from "@/config/db";
+import {normalizeEmail, normalizeName} from "@/utils/string";
+import {redis} from "@/config/redis";
+import {toSafeUser} from "@/lib/safe-user";
 
 export class UpdateProfileService {
     async updateProfile(data: {

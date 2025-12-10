@@ -1,5 +1,5 @@
-import {prisma} from "../../config/db";
-import {toSafeUser} from "../../lib/safe-user";
+import {prisma} from "@/config/db";
+import {toSafeUser} from "@/lib/safe-user";
 
 export class MeService {
     async getMe(id: string) {

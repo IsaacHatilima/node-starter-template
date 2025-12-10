@@ -1,6 +1,6 @@
 import {generateAccessToken, generateRefreshToken} from "./jwt";
 import jwt, {JwtPayload} from "jsonwebtoken";
-import {prisma} from "../config/db";
+import {prisma} from "@/config/db";
 
 export async function generateAuthToken({id, email}: { id: string; email: string }) {
     const access_token = generateAccessToken({id: id, email: email});

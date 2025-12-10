@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {container} from "../../lib/container";
+import {container} from "@/lib/container";
 
 export async function TwoFASetupController(req: Request, res: Response) {
     try {

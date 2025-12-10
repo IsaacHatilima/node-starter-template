@@ -1,5 +1,5 @@
-import {prisma} from "../../config/db";
-import {redis} from "../../config/redis";
+import {prisma} from "@/config/db";
+import {redis} from "@/config/redis";
 
 export class LogoutService {
     async logout(refreshToken: string) {

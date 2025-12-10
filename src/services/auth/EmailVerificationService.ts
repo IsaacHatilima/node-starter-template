@@ -1,6 +1,6 @@
 import "dotenv/config";
 import jwt from "jsonwebtoken";
-import {prisma} from "../../config/db";
+import {prisma} from "@/config/db";
 
 export class EmailVerificationService {
     generateVerificationToken(userId: string, email: string) {

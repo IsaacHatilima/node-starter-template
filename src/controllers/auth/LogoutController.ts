@@ -1,6 +1,6 @@
 import "dotenv/config";
 import {Request, Response} from "express";
-import {container} from "../../lib/container";
+import {container} from "@/lib/container";
 
 export default async function LogoutController(req: Request, res: Response) {
 

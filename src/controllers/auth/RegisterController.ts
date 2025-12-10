@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {z} from "zod";
-import {container} from "../../lib/container";
+import {container} from "@/lib/container";
 
 const registerSchema = z.object({
     first_name: z.string().min(2),

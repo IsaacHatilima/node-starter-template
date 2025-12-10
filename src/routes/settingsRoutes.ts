@@ -1,14 +1,14 @@
 import {Router} from "express";
-import {AuthMiddleware} from "../middleware/authMiddleware";
-import UpdatePasswordController from "../controllers/settings/UpdatePasswordController";
-import UpdateProfileController from "../controllers/settings/UpdateProfileController";
-import DeleteAccountController from "../controllers/settings/DeleteAccountController";
+import {AuthMiddleware} from "@/middleware/authMiddleware";
+import UpdatePasswordController from "@/controllers/settings/UpdatePasswordController";
+import UpdateProfileController from "@/controllers/settings/UpdateProfileController";
+import DeleteAccountController from "@/controllers/settings/DeleteAccountController";
 import {
     TwoFADisableController,
     TwoFAEnableController,
     TwoFARegenerateCodesController,
     TwoFASetupController
-} from "../controllers/settings/TwoFactorController";
+} from "@/controllers/settings/TwoFactorController";
 
 const router = Router();
 
