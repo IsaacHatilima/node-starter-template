@@ -20,9 +20,9 @@
     ]
   },
   "include": [
-    "server.js",
-    "app.js",
-    "src/**/*.js",
+    "server.ts",
+    "app.ts",
+    "src/**/*.ts",
     "src/**/*.d.ts"
   ],
   "exclude": [

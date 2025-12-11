@@ -1,7 +1,7 @@
 import request from "supertest";
-import {createApp} from "../../../app.js";
-import {generateAccessToken} from "../../../src/lib/jwt.js";
-import {createAuthUser} from "../../test-helpers.js";
+import {createApp} from "../../../app";
+import {generateAccessToken} from "../../../src/lib/jwt";
+import {createAuthUser} from "../../test-helpers";
 
 const app = createApp();
 

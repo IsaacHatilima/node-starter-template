@@ -1,7 +1,7 @@
 import request from "supertest";
-import {createApp} from "../../../app.js";
-import {prisma} from "../../../src/config/db.js";
-import {createPublicUser} from "../../test-helpers.js";
+import {createApp} from "../../../app";
+import {prisma} from "../../../src/config/db";
+import {createPublicUser} from "../../test-helpers";
 
 const app = createApp();
 
@@ -28,12 +28,12 @@ describe("POST /auth/forgot-password", () => {
 
         expect(resetToken).toBeDefined();
     });
-
+    
     it("returns 404 for non-existent email", async () => {
         const res = await request(app)
             .post("/auth/forgot-password")
             .send({
-                email: "nonexistent@example.com",
+                email: "nonexistentemail@example.com",
             });
 
         expect(res.status).toBe(404);

@@ -1,10 +1,10 @@
 import request from "supertest";
-import {createApp} from "../../../app.js";
-import {prisma} from "../../../src/config/db.js";
+import {createApp} from "../../../app";
+import {prisma} from "../../../src/config/db";
 import bcrypt from "bcrypt";
-import {generateAccessToken, generateRefreshToken} from "../../../src/lib/jwt.js";
+import {generateAccessToken, generateRefreshToken} from "../../../src/lib/jwt";
 import jwt, {JwtPayload} from "jsonwebtoken";
-import {createAuthUser} from "../../test-helpers.js";
+import {createAuthUser} from "../../test-helpers";
 
 const app = createApp();
 
@@ -14,7 +14,6 @@ describe("POST /auth/refresh-tokens", () => {
 
         const refresh_token = generateRefreshToken({
             id: created.user.id,
-            email: created.user.email,
         });
 
         const decoded = jwt.decode(created.access_token) as JwtPayload & { jti?: string };
@@ -78,7 +77,6 @@ describe("POST /auth/refresh-tokens", () => {
 
         const refresh_token = generateRefreshToken({
             id: user.id,
-            email: user.email,
         });
 
         const decoded = jwt.decode(access_token) as JwtPayload & { jti?: string };

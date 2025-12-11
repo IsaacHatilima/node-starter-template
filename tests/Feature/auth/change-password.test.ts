@@ -1,9 +1,9 @@
 import request from "supertest";
-import {createApp} from "../../../app.js";
-import {prisma} from "../../../src/config/db.js";
+import {createApp} from "../../../app";
+import {prisma} from "../../../src/config/db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import {createPublicUser} from "../../test-helpers.js";
+import {createPublicUser} from "../../test-helpers";
 
 const app = createApp();
 

@@ -1,9 +1,9 @@
 import request from "supertest";
-import {createApp} from "../../../app.js";
-import {createAuthUser} from "../../test-helpers.js";
+import {createApp} from "../../../app";
+import {createAuthUser} from "../../test-helpers";
 import bcrypt from "bcrypt";
-import {prisma} from "../../../src/config/db.js";
-import {generateAccessToken} from "../../../src/lib/jwt.js";
+import {prisma} from "../../../src/config/db";
+import {generateAccessToken} from "../../../src/lib/jwt";
 import {authenticator} from "otplib";
 
 const app = createApp();
