@@ -1,6 +1,6 @@
 import request from "supertest";
-import {createApp} from "../../../app.js";
-import {createAuthUser} from "../../test-helpers.js";
+import {createApp} from "../../../app";
+import {createAuthUser} from "../../test-helpers";
 
 const app = createApp();
 
@@ -34,7 +34,7 @@ describe("PUT /settings/update-password", () => {
             });
 
         expect(res.status).toBe(400);
-        expect(res.body.errors).toContain("Invalid Password.");
+        expect(res.body.errors).toContain("Invalid password.");
     });
 
     it("user cannot update password with mismatched passwords", async () => {

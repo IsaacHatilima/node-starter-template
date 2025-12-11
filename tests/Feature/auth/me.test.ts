@@ -1,7 +1,7 @@
 import request from "supertest";
-import {createApp} from "../../../app.js";
-import {generateAccessToken} from "../../../src/lib/jwt.js";
-import {createAuthUser} from "../../test-helpers.js";
+import {createApp} from "../../../app";
+import {generateAccessToken} from "../../../src/lib/jwt";
+import {createAuthUser} from "../../test-helpers";
 
 const app = createApp();
 
@@ -25,7 +25,7 @@ describe("GET /auth/me", () => {
         expect(res.status).toBe(401);
     });
 
-    it("returns 401 when user no longer exists", async () => {
+    it("returns 404 when user no longer exists", async () => {
         const access_token = generateAccessToken({
             id: "nonexistent-user-id",
             email: "ghost@example.com",

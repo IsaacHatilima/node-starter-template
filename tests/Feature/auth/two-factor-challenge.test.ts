@@ -1,9 +1,9 @@
 import request from "supertest";
-import {createApp} from "../../../app.js";
-import {prisma} from "../../../src/config/db.js";
+import {createApp} from "../../../app";
+import {prisma} from "../../../src/config/db";
 import bcrypt from "bcrypt";
 import speakeasy from "speakeasy";
-import {redis} from "../../../src/config/redis.js";
+import {redis} from "../../../src/config/redis";
 import {v4 as uuidv4} from "uuid";
 
 const app = createApp();
@@ -115,7 +115,7 @@ describe("POST /auth/2fa/verify", () => {
             });
 
         expect(res.status).toBe(400);
-        expect(res.body.errors).toContain("Challenge not found or expired.");
+        expect(res.body.errors).toContain("Two-factor challenge not found.");
     });
 
     it("returns 400 for invalid 2FA code", async () => {
@@ -151,6 +151,6 @@ describe("POST /auth/2fa/verify", () => {
             });
 
         expect(res.status).toBe(400);
-        expect(res.body.errors).toContain("Invalid 2FA token or code.");
+        expect(res.body.errors).toContain("Invalid two-factor authentication code.");
     });
 });

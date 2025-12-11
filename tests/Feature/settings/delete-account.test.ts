@@ -1,9 +1,9 @@
 import request from "supertest";
-import {createApp} from "../../../app.js";
-import {createAuthUser} from "../../test-helpers.js";
-import {generateRefreshToken} from "../../../src/lib/jwt.js";
+import {createApp} from "../../../app";
+import {createAuthUser} from "../../test-helpers";
+import {generateRefreshToken} from "../../../src/lib/jwt";
 import jwt, {JwtPayload} from "jsonwebtoken";
-import {prisma} from "../../../src/config/db.js";
+import {prisma} from "../../../src/config/db";
 
 const app = createApp();
 
@@ -13,7 +13,6 @@ describe("POST /settings/delete-account", () => {
 
         const refresh_token = generateRefreshToken({
             id: created.user.id,
-            email: created.user.email,
         });
 
         const decoded = jwt.decode(created.access_token) as JwtPayload & { jti?: string };
@@ -49,8 +48,8 @@ describe("POST /settings/delete-account", () => {
                 password: "WrongPassword#"
             });
 
-        expect(res.status).toBe(401);
-        expect(res.body.errors).toContain("Invalid Password.");
+        expect(res.status).toBe(400);
+        expect(res.body.errors).toContain("Invalid password.");
     });
 
     it("user cannot delete account without password", async () => {

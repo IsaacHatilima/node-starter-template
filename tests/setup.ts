@@ -1,5 +1,5 @@
-import {connectDB, disconnectDB, prisma} from "../src/config/db.js";
-import {initRedis} from "../src/config/redis.js";
+import {connectDB, disconnectDB, prisma} from "../src/config/db";
+import {initRedis} from "../src/config/redis";
 
 
 vi.mock("../src/lib/mailer", () => ({
