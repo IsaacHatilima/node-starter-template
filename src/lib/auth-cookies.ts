@@ -20,3 +20,21 @@ export function setAuthCookies(res: Response, tokens: { refresh: string; access:
         maxAge: accessMaxAge,
     });
 }
+
+export function clearAuthCookies(res: Response) {
+    const isProduction = env.NODE_ENV === "production";
+
+    res.clearCookie("refresh_token", {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: "strict",
+        path: "/auth",
+    });
+
+    res.clearCookie("access_token", {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: "strict",
+        path: "/",
+    });
+}

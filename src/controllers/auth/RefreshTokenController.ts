@@ -1,7 +1,7 @@
 import "dotenv/config";
 import {container} from "../../lib/container";
 import {NextFunction, Request, Response} from "express";
-import {setAuthCookies} from "../../lib/set-auth-cookies";
+import {setAuthCookies} from "../../lib/auth-cookies";
 
 export default async function RefreshTokenController(req: Request, res: Response, next: NextFunction) {
     try {

@@ -1,6 +1,7 @@
 import {z} from "zod";
 import {container} from "../../lib/container";
 import {NextFunction, Request, Response} from "express";
+import {clearAuthCookies} from "../../lib/auth-cookies";
 
 const deleteProfileSchema = z.object({
     password: z.string(),
@@ -16,7 +17,9 @@ export default async function DeleteAccountController(req: Request, res: Respons
         }
 
         await container.deleteAccountService.deleteAccount(parsed.data, req);
-        
+
+        clearAuthCookies(res);
+
         return res.json({
             message: "Profile Deleted successfully.",
         });

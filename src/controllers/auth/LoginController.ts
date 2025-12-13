@@ -1,6 +1,6 @@
 import "dotenv/config";
 import {container} from "../../lib/container";
-import {setAuthCookies} from "../../lib/set-auth-cookies";
+import {setAuthCookies} from "../../lib/auth-cookies";
 import {NextFunction, Request, Response} from "express";
 import {z} from "zod";
 
