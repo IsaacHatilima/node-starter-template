@@ -14,7 +14,7 @@ export const env = {
     APP_NAME: optional("APP_NAME", "Auth API"),
     APP_KEY: required("APP_KEY"),
     APP_URL: required("APP_URL"),
-    NODE_ENV: required("NODE_ENV"),
+    NODE_ENV: optional("NODE_ENV", "local"),
     GOOGLE_CLIENT_ID: required("GOOGLE_CLIENT_ID"),
     JWT_REFRESH_SECRET: required("JWT_REFRESH_SECRET"),
     JWT_ACCESS_SECRET: required("JWT_ACCESS_SECRET"),

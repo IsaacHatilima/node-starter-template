@@ -2,6 +2,7 @@ import "dotenv/config";
 import {createApp} from "./app";
 import {connectDB, disconnectDB} from "./src/config/db";
 import {initRedis} from "./src/config/redis";
+import {logger} from "./src/lib/logger";
 
 (async () => {
     try {
@@ -12,7 +13,7 @@ import {initRedis} from "./src/config/redis";
         const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
         const server = app.listen(port, () => {
-            console.log("Server running on port 3000");
+            logger.info(`🚀 Server running on port ${port}`);
         });
 
         process.on("unhandledRejection", (err) => {

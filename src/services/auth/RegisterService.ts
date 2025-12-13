@@ -5,7 +5,7 @@ import {normalizeEmail, normalizeName} from "../../utils/string";
 import {container} from "../../lib/container";
 import {buildEmailTemplate, sendMail} from "../../lib/mailer";
 import {toSafeUser} from "../../lib/safe-user";
-import {AppError, EmailTakenError} from "../../lib/errors";
+import {EmailTakenError} from "../../lib/errors";
 
 export class RegisterService {
     async register(data: { email: string; password: string; first_name: string; last_name: string; }) {
@@ -33,13 +33,13 @@ export class RegisterService {
                 url: verificationUrl,
                 buttonText: "Verify Email",
             }));
-            
+
             return toSafeUser(user);
         } catch (error: any) {
             if (error.code === "P2002") {
                 throw new EmailTakenError();
             }
-            throw new AppError("Internal server error");
+            throw error;
         }
     }
 }

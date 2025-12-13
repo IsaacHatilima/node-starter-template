@@ -1,50 +1,69 @@
 import "dotenv/config";
 import {PrismaClient} from "../generated/prisma/client";
 import {PrismaPg} from "@prisma/adapter-pg";
+import {logger} from "../lib/logger.js";
+import {env} from "../utils/environment-variables";
 
-
-const isTest = process.env.NODE_ENV === "local";
+const isTest = env.NODE_ENV === "local";
 const schema = isTest ? "test" : "public";
-console.log("[DB] Selected schema:", schema);
 
-let adapter;
+logger.info({schema}, "[DB] Selected schema");
+
+let adapter: PrismaPg;
+
+if (!process.env.DATABASE_URL) {
+    logger.fatal("[DB] DATABASE_URL is not set");
+    process.exit(1);
+}
+
 try {
     adapter = new PrismaPg(
         {connectionString: process.env.DATABASE_URL},
         {schema}
     );
-    console.log("[DB] PrismaPg adapter created");
+
+    logger.info("[DB] PrismaPg adapter created");
 } catch (err) {
-    console.error("[DB] Failed to create PrismaPg adapter:", err);
-    throw err;
+    logger.fatal(
+        {err},
+        "[DB] Failed to create PrismaPg adapter"
+    );
+    process.exit(1);
 }
 
 let prisma: PrismaClient;
+
 try {
     prisma = new PrismaClient({adapter});
-    console.log("[DB] PrismaClient instance created");
+
+    logger.info("[DB] PrismaClient instance created");
 } catch (err) {
-    console.error("[DB] Failed to instantiate PrismaClient:", err);
-    throw err;
+    logger.fatal(
+        {err},
+        "[DB] Failed to instantiate PrismaClient"
+    );
+    process.exit(1);
 }
 
 const connectDB = async () => {
-    console.log("[DB] Attempting prisma.$connect()...");
+    logger.info("[DB] Connecting to database...");
 
     try {
         await prisma.$connect();
-        console.log("[DB] prisma.$connect() SUCCESS");
-    } catch (error) {
-        console.error("[DB] prisma.$connect() ERROR:", error);
-        console.error("[DB] This means Prisma failed to initialize.");
+        logger.info("[DB] Database connection established");
+    } catch (err) {
+        logger.fatal(
+            {err},
+            "[DB] prisma.$connect() failed"
+        );
         process.exit(1);
     }
 };
 
 const disconnectDB = async () => {
-    console.log("[DB] Disconnecting Prisma...");
+    logger.info("[DB] Disconnecting Prisma...");
     await prisma.$disconnect();
-    console.log("[DB] Prisma disconnected.");
+    logger.info("[DB] Prisma disconnected");
 };
 
 export {prisma, connectDB, disconnectDB};
