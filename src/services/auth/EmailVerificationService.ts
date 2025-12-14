@@ -5,7 +5,7 @@ import {env} from "../../utils/environment-variables";
 
 export class EmailVerificationService {
     generateVerificationToken(userId: string, email: string) {
-        return jwt.sign({id: userId, email}, env.APP_KEY, {expiresIn: "1h"});
+        return jwt.sign({id: userId, email}, env.APP_KEY, {expiresIn: "1h"}); //@safe
     }
 
     async verifyEmail(token: string) {
