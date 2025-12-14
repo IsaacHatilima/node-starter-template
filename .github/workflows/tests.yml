@@ -79,4 +79,4 @@ jobs:
         run: npx dotenv -e .env.test -- npx prisma generate
 
       - name: Run tests
-        run: npx dotenv -e .env.test -- npm run test
+        run: npx dotenv -e .env.test -- npm run test --maxConcurrency 1
