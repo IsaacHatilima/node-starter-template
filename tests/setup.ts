@@ -27,9 +27,10 @@ async function resetPostgresDatabase() {
     }
 }
 
+await connectDB();
+await initRedis();
+
 beforeAll(async () => {
-    await connectDB();
-    await initRedis();
     await resetPostgresDatabase();
 });
 

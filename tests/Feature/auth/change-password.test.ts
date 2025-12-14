@@ -121,8 +121,6 @@ describe("POST /auth/change-password", () => {
                 password_confirm: "NewPassword1#",
             });
 
-        console.log(res.body);
-
         expect(res.status).toBe(400);
         expect(res.body.errors).toContain("Invalid or expired token.");
     });
