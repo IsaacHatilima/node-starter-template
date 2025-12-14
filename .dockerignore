@@ -3,7 +3,7 @@ node_modules
 
 # Dev stuff
 .env
-.env.test
+.envww.test
 .idea
 npm-debug.log
 .vscode

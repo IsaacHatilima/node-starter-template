@@ -4,10 +4,8 @@ import {PrismaPg} from "@prisma/adapter-pg";
 import {logger} from "../lib/logger.js";
 import {env} from "../utils/environment-variables";
 
-const isTest = env.NODE_ENV === "local";
+const isTest = env.NODE_ENV === "test";
 const schema = isTest ? "test" : "public";
-
-logger.info({schema}, "[DB] Selected schema");
 
 let adapter: PrismaPg;
 

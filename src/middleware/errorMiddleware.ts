@@ -11,7 +11,6 @@ export function errorMiddleware(
     next: NextFunction
 ) {
     const isProd = env.NODE_ENV === "production";
-    console.log("ENV: ", env.NODE_ENV);
 
     // Expected / domain errors
     if (err instanceof AppError) {

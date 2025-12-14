@@ -59,12 +59,10 @@
     "build": "tsup",
     "postbuild": "tsc-alias",
     "start": "node dist/server.js",
-    "dev": "dotenv -e .env.development -- nodemon",
-    "db:migrate": "dotenv -e .env.development -- npx prisma migrate dev",
-    "db:sync:dev": "dotenv -e .env.development -- npx prisma migrate deploy && npx prisma generate",
-    "db:sync:test": "dotenv -e .env.test -- npx prisma migrate deploy",
-    "db:sync": "npm run db:sync:dev && npm run db:sync:test",
-    "test": "dotenv -e .env.test -- vitest run"
+    "dev": "nodemon",
+    "db:migrate": "npx prisma migrate dev",
+    "db:sync": "npx prisma migrate deploy && npx prisma generate",
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",

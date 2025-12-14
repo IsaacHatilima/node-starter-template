@@ -1,7 +1,7 @@
 node_modules
 .env
-.env.development
-.env.test
+.envss.development
+.envww.test
 .idea
 /dist
 .node_modules
