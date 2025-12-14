@@ -58,12 +58,11 @@ jobs:
           echo "PORT=3000" >> .env.test
           echo "APP_URL=http://127.0.0.1:3000" >> .env.test
           echo "NODE_ENV=local" >> .env.test
-          echo "APP_KEY=$(openssl rand -hex 32)" >> .env.test
-          echo "JWT_ACCESS_SECRET=$(openssl rand -hex 32)" >> .env.test
-          echo "JWT_REFRESH_SECRET=$(openssl rand -hex 32)" >> .env.test
+          echo "APP_KEY=b60603dbb0cbfc5b6a971c82065c50d6905ead5a94ab528850d1ec634780d658" >> .env.test
+          echo "JWT_ACCESS_SECRET=cd83847b0821ca84911b2b5a161bd226efedaafbef8819c16df540202f4a0b7d" >> .env.test
+          echo "JWT_REFRESH_SECRET=0483e6e945f415ecedfa81480e691ae74ca8d33c539b57e12982d56dc57e4613" >> .env.test
           echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/node_starter_template?schema=test" >> .env.test
-          echo "REDIS_HOST=localhost" >> .env.test
-          echo "REDIS_PORT=6379" >> .env.test
+          echo "REDIS_URL=redis://localhost:6379" >> .env.test
           echo "GOOGLE_CLIENT_ID=dummy" >> .env.test
           echo "GOOGLE_CLIENT_SECRET=dummy" >> .env.test
           echo "MAIL_HOST=0.0.0.0" >> .env.test
