@@ -1,7 +1,6 @@
 import {prisma} from "../../config/db";
 import bcrypt from "bcrypt";
 import {generateAccessToken, generateRefreshToken} from "../../lib/jwt";
-import jwt from "jsonwebtoken";
 import {redis} from "../../config/redis";
 import {v4 as uuidv4} from "uuid";
 import {toSafeUser} from "../../lib/safe-user";
@@ -56,13 +55,10 @@ export class LoginService {
             id: user.id,
         });
 
-        const {jti} = jwt.decode(access_token) as { jti: string };
-
         try {
             await prisma.refreshToken.create({
                 data: {
                     userId: user.id,
-                    jti,
                     token: refresh_token,
                     expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000),
                 },
@@ -84,11 +80,6 @@ export class LoginService {
             await redis
                 .multi()
                 .setEx(
-                    `session:${jti}`,
-                    60 * 5,
-                    JSON.stringify({userId: user.id, jti})
-                )
-                .setEx(
                     `user:${user.id}`,
                     60 * 5,
                     JSON.stringify(toSafeUser(user))
@@ -97,7 +88,7 @@ export class LoginService {
         } catch (error) {
             throw new SessionCreationError();
         }
-        
+
         return {
             user: toSafeUser(user),
             access_token,

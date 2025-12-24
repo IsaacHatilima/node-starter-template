@@ -12,12 +12,14 @@ export default async function RefreshTokenController(req: Request, res: Response
         const tokens = await container.refreshTokenService.refresh(refreshToken);
 
         setAuthCookies(res, {
-            refresh: tokens.refresh_token!,
-            access: tokens.access_token!,
+            refresh: tokens.refresh_token,
+            access: tokens.access_token,
         });
 
         return res.json({
             message: "Token refreshed",
+            refresh: tokens.refresh_token,
+            access: tokens.access_token,
         });
     } catch (error: any) {
         next(error);

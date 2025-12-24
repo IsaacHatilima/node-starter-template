@@ -7,40 +7,44 @@ import {AppError, InvalidRefreshTokenError} from "../../lib/errors";
 
 export class RefreshTokenService {
     async refresh(refreshToken: string) {
-        let stored;
-        try {
-            stored = await prisma.refreshToken.findUnique({
-                where: {token: refreshToken}
-            });
-        } catch {
-            throw new AppError("Failed to validate refresh token");
-        }
+        let decoded: { id: string };
 
-        if (!stored || stored.revoked) {
-            throw new InvalidRefreshTokenError();
-        }
-
-        let decoded: { id: string; email: string };
         try {
-            decoded = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as {
-                id: string;
-                email: string;
-            };
+            decoded = jwt.verify(
+                refreshToken,
+                env.JWT_REFRESH_SECRET
+            ) as { id: string };
         } catch {
             throw new InvalidRefreshTokenError();
         }
 
-        let newRefresh: string;
-        let newAccess: string;
-        let newJti: string;
+        const stored = await prisma.refreshToken.findUnique({
+            where: {token: refreshToken},
+        });
 
-        try {
-            newRefresh = generateRefreshToken({id: decoded.id});
-            newAccess = generateAccessToken({id: decoded.id, email: decoded.email});
-            newJti = (jwt.decode(newAccess) as { jti: string }).jti;
-        } catch {
-            throw new AppError("Failed to generate tokens");
+        if (
+            !stored ||
+            stored.revoked ||
+            stored.userId !== decoded.id ||
+            stored.expiresAt < new Date()
+        ) {
+            throw new InvalidRefreshTokenError();
         }
+
+        const user = await prisma.user.findUnique({
+            where: {id: stored.userId},
+            select: {id: true, email: true},
+        });
+
+        if (!user) {
+            throw new InvalidRefreshTokenError();
+        }
+
+        const newRefresh = generateRefreshToken({id: stored.userId});
+        const newAccess = generateAccessToken({
+            id: stored.userId,
+            email: user.email,
+        });
 
         try {
             await prisma.$transaction([
@@ -50,30 +54,16 @@ export class RefreshTokenService {
                 }),
                 prisma.refreshToken.create({
                     data: {
-                        userId: decoded.id,
-                        jti: newJti,
+                        userId: stored.userId,
                         token: newRefresh,
                         expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000),
                     },
                 }),
             ]);
+
+            await redis.del(`user:${stored.userId}`);
         } catch {
             throw new AppError("Failed to update refresh tokens");
-        }
-
-        try {
-            await redis
-                .multi()
-                .del(`session:${stored.jti}`)
-                .del(`user:${stored.userId}`)
-                .setEx(
-                    `session:${newJti}`,
-                    60 * 5,
-                    JSON.stringify({userId: decoded.id, jti: newJti})
-                )
-                .exec();
-        } catch {
-            throw new AppError("Failed to update session store");
         }
 
         return {

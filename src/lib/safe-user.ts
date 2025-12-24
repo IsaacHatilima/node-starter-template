@@ -5,6 +5,6 @@ export function toSafeUser(user: User & { profile: Profile | null }) {
 
     return {
         ...rest,
-        profile: user.profile ?? null,
+        profile: user.profile,
     };
 }

@@ -1,7 +1,6 @@
 model RefreshToken {
   id        String   @id @default(uuid())
   userId    String
-  jti       String   @unique
   token     String   @unique
   revoked   Boolean  @default(false)
   createdAt DateTime @default(now())

@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
-import {redis} from "../config/redis";
 import {prisma} from "../config/db";
-import {toSafeUser} from "../lib/safe-user";
 import {NextFunction, Request, Response} from "express";
 import {env} from "../utils/environment-variables";
+import {toSafeUser} from "../lib/safe-user";
+import {redis} from "../config/redis";
 
 export async function AuthMiddleware(req: Request, res: Response, next: NextFunction) {
     let token;
@@ -11,34 +11,20 @@ export async function AuthMiddleware(req: Request, res: Response, next: NextFunc
         token = req.headers.authorization.split(" ")[1];
     } else if (req.cookies?.access_token) {
         token = req.cookies.access_token;
+        console.log(req.cookies.access_token);
     }
+
     if (!token) {
         return res.status(401).json({errors: ["Unauthorized"]});
     }
+
     try {
-        const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET) as { id: string; jti: string }
-        if (decoded.jti) {
-            const sessionKey = `session:${decoded.jti}`;
-            const session = await redis.get(sessionKey);
-            if (!session) {
-                const revoked = await prisma.refreshToken.findFirst({
-                    where: {
-                        jti: decoded.jti,
-                        revoked: true
-                    }
-                });
-                if (revoked) {
-                    return res.status(401).json({errors: ["Token expired"]});
-                }
-                await redis.setEx(sessionKey, 60 * 5, JSON.stringify({
-                    userId: decoded.id,
-                    jti: decoded.jti,
-                }));
-            }
-        }
+        const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET) as { id: string; }
+
         const userCacheKey = `user:${decoded.id}`;
         const cachedUser = await redis.get(userCacheKey);
         let user;
+
         if (cachedUser) {
             user = JSON.parse(cachedUser);
         } else {
@@ -46,13 +32,23 @@ export async function AuthMiddleware(req: Request, res: Response, next: NextFunc
                 where: {id: decoded.id},
                 include: {profile: true},
             });
+
             if (!user) {
-                return res.status(401).json({errors: ["Invalid or expired token"]});
+                return res.status(401).json({
+                    errors: ["Invalid user or missing profile"],
+                });
             }
-            await redis.setEx(userCacheKey, 60 * 5, JSON.stringify(toSafeUser(user)));
+
+            await redis.setEx(
+                `user:${user.id}`,
+                60 * 5,
+                JSON.stringify(toSafeUser(user))
+            );
         }
-        req.user = user;
+
+        req.user = toSafeUser(user);
         next();
+
     } catch (error) {
         return res.status(401).json({errors: ["Invalid or expired session"]});
     }
