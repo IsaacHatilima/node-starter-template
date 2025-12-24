@@ -2,6 +2,7 @@ import "dotenv/config";
 import jwt from "jsonwebtoken";
 import {env} from "../utils/environment-variables";
 import ms from "ms";
+import {randomUUID} from "crypto";
 
 const accessSecret = env.JWT_ACCESS_SECRET;
 const refreshSecret = env.JWT_REFRESH_SECRET;
@@ -18,5 +19,6 @@ export function generateAccessToken(payload: { id: string; email: string; }) {
 export function generateRefreshToken({id}: { id: string; }) {
     return jwt.sign({
         id,
+        jti: randomUUID(),
     }, refreshSecret, {expiresIn: refreshExpires});
 }

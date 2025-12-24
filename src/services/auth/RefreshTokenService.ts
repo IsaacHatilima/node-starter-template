@@ -1,9 +1,9 @@
 import {prisma} from "../../config/db";
-import {redis} from "../../config/redis";
 import jwt from "jsonwebtoken";
 import {generateAccessToken, generateRefreshToken} from "../../lib/jwt";
 import {env} from "../../utils/environment-variables";
 import {AppError, InvalidRefreshTokenError} from "../../lib/errors";
+import {redis} from "../../config/redis";
 
 export class RefreshTokenService {
     async refresh(refreshToken: string) {
@@ -62,7 +62,8 @@ export class RefreshTokenService {
             ]);
 
             await redis.del(`user:${stored.userId}`);
-        } catch {
+        } catch (e) {
+            console.error("Failed to update refresh tokens", e);
             throw new AppError("Failed to update refresh tokens");
         }
 

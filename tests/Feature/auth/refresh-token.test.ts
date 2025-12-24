@@ -3,7 +3,6 @@ import {createApp} from "../../../app";
 import {prisma} from "../../../src/config/db";
 import bcrypt from "bcrypt";
 import {generateAccessToken, generateRefreshToken} from "../../../src/lib/jwt";
-import jwt, {JwtPayload} from "jsonwebtoken";
 import {createAuthUser} from "../../test-helpers";
 
 const app = createApp();
@@ -16,13 +15,9 @@ describe("POST /auth/refresh-tokens", () => {
             id: created.user.id,
         });
 
-        const decoded = jwt.decode(created.access_token) as JwtPayload & { jti?: string };
-        const jti = decoded.jti as string;
-
         await prisma.refreshToken.create({
             data: {
                 userId: created.user.id,
-                jti,
                 token: refresh_token,
                 expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000),
             },
@@ -79,13 +74,10 @@ describe("POST /auth/refresh-tokens", () => {
             id: user.id,
         });
 
-        const decoded = jwt.decode(access_token) as JwtPayload & { jti?: string };
-        const jti = decoded.jti as string;
 
         await prisma.refreshToken.create({
             data: {
                 userId: user.id,
-                jti,
                 token: refresh_token,
                 revoked: true,
                 expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000),

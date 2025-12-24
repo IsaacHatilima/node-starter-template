@@ -34,7 +34,7 @@ export async function AuthMiddleware(req: Request, res: Response, next: NextFunc
 
             if (!user) {
                 return res.status(401).json({
-                    errors: ["Invalid user or missing profile"],
+                    errors: ["Invalid or expired token"],
                 });
             }
 
