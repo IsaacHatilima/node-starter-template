@@ -38,7 +38,10 @@ const EnvSchema = z.object({
     JWT_ACCESS_SECRET: z.string({message: "JWT_ACCESS_SECRET is required"}),
 
     PORT: z.coerce.number().int().positive().default(3000),
-    SWAGGER_ENABLED: z.coerce.boolean().default(false),
+    SWAGGER_ENABLED: z
+        .enum(["true", "false"])
+        .default("false")
+        .transform(v => v === "true"),
 
     JWT_ACCESS_EXPIRES_IN: z.string().default("120m"),
     JWT_REFRESH_EXPIRES_IN: z.string().default("7d"),
