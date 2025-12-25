@@ -1,6 +1,6 @@
 import "dotenv/config";
 import nodemailer from "nodemailer";
-import {env} from "./../utils/environment-variables";
+import {env} from "../utils/environment-variables";
 
 export const mailer = nodemailer.createTransport({
     host: env.MAIL_HOST,
