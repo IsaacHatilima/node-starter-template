@@ -27,8 +27,7 @@ export async function TwoFAEnableController(req: Request, res: Response, next: N
 
 export async function TwoFADisableController(req: Request, res: Response, next: NextFunction) {
     try {
-        const {code, backup_code} = req.body;
-        const result = await container.twoFactorService.disableMFA({code, backup_code}, req);
+        const result = await container.twoFactorService.disableMFA(req);
         return res.json({message: "2FA disabled", ...result});
     } catch (error: any) {
         next(error);

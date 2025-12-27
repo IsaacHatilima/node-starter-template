@@ -21,15 +21,15 @@ export class TwoFactorChallengeService {
             throw new TwoFactorChallengeNotFoundError();
         }
 
-        let userId: string;
+        let userPublicId: string;
         try {
-            userId = JSON.parse(payload).userId;
+            userPublicId = JSON.parse(payload).userId;
         } catch {
             throw new TwoFactorChallengeNotFoundError();
         }
 
         const user = await prisma.user.findUnique({
-            where: {id: userId},
+            where: {public_id: userPublicId},
             include: {profile: true},
         });
 
@@ -82,11 +82,6 @@ export class TwoFactorChallengeService {
         try {
             await redis
                 .multi()
-                .setEx(
-                    `session:${tokens.jti}`,
-                    60 * 5,
-                    JSON.stringify({userId: user.id, jti: tokens.jti})
-                )
                 .setEx(
                     `user:${user.id}`,
                     60 * 5,

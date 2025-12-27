@@ -7,13 +7,13 @@ import {redis} from "../../config/redis";
 
 export class RefreshTokenService {
     async refresh(refreshToken: string) {
-        let decoded: { id: string };
+        let decoded: { id: number };
 
         try {
             decoded = jwt.verify(
                 refreshToken,
                 env.JWT_REFRESH_SECRET
-            ) as { id: string };
+            ) as { id: number };
         } catch {
             throw new InvalidRefreshTokenError();
         }

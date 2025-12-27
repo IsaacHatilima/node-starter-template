@@ -7,7 +7,7 @@ import {InvalidPasswordError, LogoutSessionError, UserDeletionError} from "../..
 export class DeleteAccountService {
     async deleteAccount(data: { password: string }, reqUser: Request) {
         const user = await prisma.user.findUnique({
-            where: {id: reqUser.user.id}
+            where: {public_id: reqUser.user.public_id}
         });
 
         if (!user) {
@@ -29,10 +29,7 @@ export class DeleteAccountService {
 
             if (jtiRecord) {
                 await redis
-                    .multi()
-                    .del(`session:${jtiRecord.jti}`)
-                    .del(`user:${user.id}`)
-                    .exec();
+                    .del(`user:${user.id}`);
             }
         } catch (error) {
             throw new LogoutSessionError();

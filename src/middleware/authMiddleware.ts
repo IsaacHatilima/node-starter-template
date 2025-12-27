@@ -18,7 +18,7 @@ export async function AuthMiddleware(req: Request, res: Response, next: NextFunc
     }
 
     try {
-        const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET) as { id: string; }
+        const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET) as { id: number; }
 
         const userCacheKey = `user:${decoded.id}`;
         const cachedUser = await redis.get(userCacheKey);

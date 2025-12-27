@@ -14,9 +14,9 @@ export class ForgotPasswordTokenCheckerService {
             throw new InvalidPasswordTokenError();
         }
 
-        let decoded: { id: string };
+        let decoded: { id: number };
         try {
-            decoded = jwt.verify(token, env.APP_KEY) as { id: string };
+            decoded = jwt.verify(token, env.APP_KEY) as { id: number };
         } catch {
             throw new InvalidPasswordTokenError();
         }

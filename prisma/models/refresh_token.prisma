@@ -1,10 +1,11 @@
 model RefreshToken {
-  id        String   @id @default(uuid())
-  userId    String
-  token     String   @unique
-  revoked   Boolean  @default(false)
-  createdAt DateTime @default(now())
-  expiresAt DateTime
+  id            Int     @id @default(autoincrement())
+  public_id     String   @unique @default(uuid())
+  userId        Int
+  token         String   @unique
+  revoked       Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  expiresAt     DateTime
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

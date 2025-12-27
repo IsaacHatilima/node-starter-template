@@ -4,14 +4,14 @@ import {prisma} from "../../config/db";
 import {env} from "../../utils/environment-variables";
 
 export class EmailVerificationService {
-    generateVerificationToken(userId: string, email: string) {
+    generateVerificationToken(userId: number, email: string) {
         return jwt.sign({id: userId, email}, env.APP_KEY, {expiresIn: "1h"}); //@safe
     }
 
     async verifyEmail(token: string) {
         let decoded;
         try {
-            decoded = jwt.verify(token, env.APP_KEY) as { id: string }
+            decoded = jwt.verify(token, env.APP_KEY) as { id: number }
         } catch {
             throw new Error("INVALID_OR_EXPIRED_TOKEN");
         }

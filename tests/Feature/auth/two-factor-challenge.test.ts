@@ -31,7 +31,7 @@ describe("POST /auth/2fa/verify", () => {
         await redis.setEx(
             `tfchal:${challengeId}`,
             60 * 5,
-            JSON.stringify({userId: user.id})
+            JSON.stringify({userId: user.public_id})
         );
 
         const code = speakeasy.totp({
@@ -76,7 +76,7 @@ describe("POST /auth/2fa/verify", () => {
         await redis.setEx(
             `tfchal:${challengeId}`,
             60 * 5,
-            JSON.stringify({userId: user.id})
+            JSON.stringify({userId: user.public_id})
         );
 
         const res = await request(app)
@@ -140,7 +140,7 @@ describe("POST /auth/2fa/verify", () => {
         await redis.setEx(
             `tfchal:${challengeId}`,
             60 * 5,
-            JSON.stringify({userId: user.id})
+            JSON.stringify({userId: user.public_id})
         );
 
         const res = await request(app)

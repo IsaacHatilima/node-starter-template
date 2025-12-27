@@ -1,5 +1,5 @@
 import {connectDB, disconnectDB, prisma} from "../src/config/db";
-import {initRedis} from "../src/config/redis";
+import {initRedis, redis} from "../src/config/redis";
 
 
 vi.mock("../src/lib/mailer", () => ({
@@ -10,7 +10,7 @@ vi.mock("../src/lib/mailer", () => ({
     }
 }));
 
-async function resetPostgresDatabase() {
+async function resetDatabases() {
     const tables = await prisma.$queryRaw<
         Array<{ table_name: string }>
     >`
@@ -25,15 +25,24 @@ async function resetPostgresDatabase() {
             `TRUNCATE TABLE "test"."${table_name}" RESTART IDENTITY CASCADE;`
         );
     }
+
+    if (redis.isOpen) {
+        await redis.flushDb();
+    }
 }
 
-await connectDB();
-await initRedis();
-
 beforeAll(async () => {
-    await resetPostgresDatabase();
+    await connectDB();
+    await initRedis();
+});
+
+beforeEach(async () => {
+    await resetDatabases();
 });
 
 afterAll(async () => {
     await disconnectDB();
+    if (redis.isOpen) {
+        await redis.quit();
+    }
 });

@@ -27,7 +27,7 @@ describe("GET /auth/me", () => {
 
     it("returns 404 when user no longer exists", async () => {
         const access_token = generateAccessToken({
-            id: "nonexistent-user-id",
+            id: 999,
             email: "ghost@example.com",
         });
 

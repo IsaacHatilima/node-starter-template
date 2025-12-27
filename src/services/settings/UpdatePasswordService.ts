@@ -6,7 +6,7 @@ import {InvalidPasswordError, UpdatePasswordError, UserNotFoundError} from "../.
 export class UpdatePasswordService {
     async updatePassword(data: { current_password: string; password: string }, reqUser: Request) {
         const user = await prisma.user.findUnique({
-            where: {id: reqUser.user.id},
+            where: {public_id: reqUser.user.public_id},
         });
 
         if (!user) throw new UserNotFoundError();

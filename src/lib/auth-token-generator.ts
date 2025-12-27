@@ -1,7 +1,7 @@
 import {generateAccessToken, generateRefreshToken} from "./jwt";
 import {prisma} from "../config/db";
 
-export async function generateAuthToken({id, email}: { id: string; email: string; }) {
+export async function generateAuthToken({id, email}: { id: number; email: string; }) {
     const access_token = generateAccessToken({id: id, email: email});
     const refresh_token = generateRefreshToken({id: id});
     await prisma.refreshToken.create({

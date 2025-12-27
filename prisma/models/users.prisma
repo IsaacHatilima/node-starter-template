@@ -1,8 +1,12 @@
 model User {
-  id          String   @id @default(uuid())
+  id          Int     @id @default(autoincrement())
+  public_id   String   @unique @default(uuid())
   email       String   @unique
   email_verified_at   DateTime?
   password    String
+  two_factor_enabled        Boolean   @default(false)
+  two_factor_secret         String?
+  two_factor_recovery_codes String[]
   last_login  DateTime?
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
@@ -10,12 +14,6 @@ model User {
   profile Profile?
   refreshToken RefreshToken[]
   passwordResetTokens PasswordResetToken[]
-
-  // Two-Factor Authentication (2FA)
-  two_factor_enabled        Boolean   @default(false)
-  two_factor_secret         String?
-  two_factor_recovery_codes String[]
-
 
   @@map("users")
 }

@@ -16,7 +16,7 @@ export class UpdateProfileService {
 
         try {
             updatedUser = await prisma.user.update({
-                where: {id: reqUser.user.id},
+                where: {public_id: reqUser.user.public_id},
                 data: {
                     email: normalizeEmail(data.email),
                     ...(emailChanged && {email_verified_at: null}),

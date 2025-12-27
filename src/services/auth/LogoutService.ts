@@ -23,10 +23,7 @@ export class LogoutService {
 
         try {
             await redis
-                .multi()
-                .del(`session:${stored.jti}`)
-                .del(`user:${stored.userId}`)
-                .exec();
+                .del(`user:${stored.userId}`);
         } catch (error) {
             throw new AppError("Failed to clear session data.");
         }

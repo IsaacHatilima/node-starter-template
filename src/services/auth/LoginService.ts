@@ -34,13 +34,12 @@ export class LoginService {
                 await redis.setEx(
                     `tfchal:${challengeId}`,
                     60 * 5,
-                    JSON.stringify({userId: user.id})
+                    JSON.stringify({userId: user.public_id})
                 );
 
                 return {
                     two_factor_required: true,
                     challenge_id: challengeId,
-                    user: toSafeUser(user),
                 };
             } catch (error) {
                 throw new TwoFactorChallengeError();

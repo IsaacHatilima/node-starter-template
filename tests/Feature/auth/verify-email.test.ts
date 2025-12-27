@@ -40,7 +40,7 @@ describe("GET /auth/verify-email", () => {
 
     it("returns 404 if user from token does not exist", async () => {
         const fakeToken = jwt.sign(
-            {id: "nonexistent-id", email: "ghost@example.com"},
+            {id: 78, email: "ghost@example.com"},
             process.env.APP_KEY!,
             {expiresIn: "1h"}
         );

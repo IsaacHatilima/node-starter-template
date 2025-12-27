@@ -3,7 +3,7 @@ import {NextFunction, Request, Response} from "express";
 
 export default async function MeController(req: Request, res: Response, next: NextFunction) {
     try {
-        const user = await container.meService.getMe(req.user.id);
+        const user = await container.meService.getMe(req.user.public_id);
         return res.json({user}); // @safe
     } catch (error) {
         next(error);

@@ -79,10 +79,11 @@ export class GoogleLoginService {
 
         try {
             await redis
-                .multi()
-                .setEx(`session:${tokens.jti}`, 60 * 5, JSON.stringify({userId: user.id, jti: tokens.jti}))
-                .setEx(`user:${user.id}`, 60 * 5, JSON.stringify(toSafeUser(user)))
-                .exec();
+                .setEx(
+                    `user:${user.id}`,
+                    60 * 5,
+                    JSON.stringify(toSafeUser(user))
+                );
         } catch {
             throw new AppError("Failed to create login session");
         }

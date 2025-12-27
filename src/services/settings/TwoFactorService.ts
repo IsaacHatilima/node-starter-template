@@ -23,7 +23,7 @@ export class TwoFactorService {
     // -----------------------------
     async initiateSetup(reqUser: Request) {
         const user = await prisma.user.findUnique({
-            where: {id: reqUser.user.id}
+            where: {public_id: reqUser.user.public_id}
         });
 
         if (!user) throw new UserNotFoundError();
@@ -42,7 +42,7 @@ export class TwoFactorService {
         // Save in Redis (10 min)
         try {
             await redis.setEx(
-                `tfsetup:${user.id}`,
+                `tfsetup:${user.public_id}`,
                 60 * 10,
                 JSON.stringify(secret)
             );
@@ -70,7 +70,7 @@ export class TwoFactorService {
     async verifyAndEnable(data: { code: string }, reqUser: Request) {
         let cached;
         try {
-            cached = await redis.get(`tfsetup:${reqUser.user.id}`);
+            cached = await redis.get(`tfsetup:${reqUser.user.public_id}`);
         } catch {
             throw new AppError("Failed to read MFA setup.");
         }
@@ -92,7 +92,7 @@ export class TwoFactorService {
 
         try {
             await prisma.user.update({
-                where: {id: reqUser.user.id},
+                where: {public_id: reqUser.user.public_id},
                 data: {
                     two_factor_enabled: true,
                     two_factor_secret: secret.base32,
@@ -104,7 +104,7 @@ export class TwoFactorService {
         }
 
         try {
-            await redis.del(`tfsetup:${reqUser.user.id}`);
+            await redis.del(`tfsetup:${reqUser.user.public_id}`);
         } catch {
 
         }
@@ -115,35 +115,15 @@ export class TwoFactorService {
     // -----------------------------
     // 3. DISABLE MFA
     // -----------------------------
-    async disableMFA(
-        data: { code?: string; backup_code?: string },
-        reqUser: Request
-    ) {
+    async disableMFA(reqUser: Request) {
         const user = await prisma.user.findUnique({
-            where: {id: reqUser.user.id},
+            where: {public_id: reqUser.user.public_id},
         });
 
         if (!user) throw new UserNotFoundError();
 
         if (!user.two_factor_enabled)
             return {disabled: true};
-
-        let ok = false;
-
-        if (data.code && user.two_factor_secret) {
-            ok = speakeasy.totp.verify({
-                secret: user.two_factor_secret,
-                encoding: "base32",
-                token: data.code,
-                window: 1,
-            });
-        }
-
-        if (!ok && data.backup_code) {
-            ok = (user.two_factor_recovery_codes ?? []).includes(data.backup_code);
-        }
-
-        if (!ok) throw new InvalidTwoFactorTokenError();
 
         try {
             await prisma.user.update({
@@ -166,7 +146,7 @@ export class TwoFactorService {
     // -----------------------------
     async regenerateBackupCodes(reqUser: Request) {
         const user = await prisma.user.findUnique({
-            where: {id: reqUser.user.id}
+            where: {public_id: reqUser.user.public_id}
         });
 
         if (!user) throw new UserNotFoundError();
@@ -176,7 +156,7 @@ export class TwoFactorService {
 
         try {
             await prisma.user.update({
-                where: {id: reqUser.user.id},
+                where: {public_id: reqUser.user.public_id},
                 data: {two_factor_recovery_codes: backupCodes},
             });
         } catch {

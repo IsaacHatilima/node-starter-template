@@ -3,12 +3,12 @@ import {toSafeUser} from "../../lib/safe-user";
 import {AppError, UserNotFoundError} from "../../lib/errors";
 
 export class MeService {
-    async getMe(id: string) {
+    async getMe(public_id: string) {
         let user;
 
         try {
             user = await prisma.user.findUnique({
-                where: {id},
+                where: {public_id: public_id},
                 include: {profile: true},
             });
         } catch (error) {
