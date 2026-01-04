@@ -17,7 +17,9 @@ export default async function RegisterController(req: Request, res: Response, ne
         const user = await container.registerService.register(dto);
         return created(res, {
             message: 'Registered successfully.',
-            data: user,
+            data: {
+                user: user
+            },
         });
 
     } catch (error: any) {

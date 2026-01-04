@@ -82,7 +82,7 @@ export class LoginService {
                 .setEx(
                     `user:${user.id}`,
                     60 * 5,
-                    JSON.stringify(new UserDTO(user))
+                    JSON.stringify(new UserDTO(user).toJSON())
                 )
                 .exec();
         } catch (error) {
