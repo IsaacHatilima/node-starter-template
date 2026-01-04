@@ -27,6 +27,7 @@ export async function AuthMiddleware(req: Request, res: Response, next: NextFunc
 
         if (cachedUser) {
             user = JSON.parse(cachedUser);
+            req.user = user;
         } else {
             user = await prisma.user.findUnique({
                 where: {id: decoded.id},
@@ -40,14 +41,15 @@ export async function AuthMiddleware(req: Request, res: Response, next: NextFunc
                 });
             }
 
+            const userDTO = new UserDTO(user).toJSON();
             await redis.setEx(
                 `user:${user.id}`,
                 60 * 5,
-                JSON.stringify(new UserDTO(user))
+                JSON.stringify(userDTO)
             );
+            req.user = userDTO;
         }
 
-        req.user = new UserDTO(user).toJSON();
         next();
 
     } catch (error) {
