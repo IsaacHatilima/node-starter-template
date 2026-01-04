@@ -4,11 +4,12 @@ import {container} from "../../lib/container";
 import {buildEmailTemplate, sendMail} from "../../lib/mailer";
 import {env} from "../../utils/environment-variables";
 import {AppError, PasswordResetCreationError, PasswordResetEmailError, UserNotFoundError} from "../../lib/errors";
+import {ForgotPasswordRequestDTO} from "../../dtos/command/ForgotPasswordRequestDTO";
 
 export class ForgotPasswordService {
-    async requestLink(data: { email: string }) {
+    async requestLink(dto: ForgotPasswordRequestDTO) {
         const user = await prisma.user.findFirst({
-            where: {email: data.email},
+            where: {email: dto.email},
             omit: {
                 password: true
             },
@@ -16,6 +17,7 @@ export class ForgotPasswordService {
                 profile: true
             },
         });
+        
         if (!user) {
             throw new UserNotFoundError();
         }

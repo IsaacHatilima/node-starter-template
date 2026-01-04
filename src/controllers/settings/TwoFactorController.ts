@@ -1,6 +1,7 @@
 import {container} from "../../lib/container";
 import {NextFunction, Request, Response} from "express";
 import {fail, success} from "../../lib/response";
+import {TwoFactorRequestDTO} from "../../dtos/command/TwoFactorRequestDTO";
 
 export async function TwoFASetupController(req: Request, res: Response, next: NextFunction) {
     try {
@@ -19,7 +20,9 @@ export async function TwoFAEnableController(req: Request, res: Response, next: N
         const {code} = req.body;
         if (!code)
             return fail(res, {status: 422, errors: ["Token is required"]});
-        const result = await container.twoFactorService.verifyAndEnable({code}, req);
+
+        const dto = TwoFactorRequestDTO.fromParsed({code});
+        const result = await container.twoFactorService.verifyAndEnable(dto, req);
         return success(res, {message: "2FA enabled", data: result});
     } catch (error: any) {
         next(error);

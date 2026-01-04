@@ -47,7 +47,7 @@ export async function AuthMiddleware(req: Request, res: Response, next: NextFunc
             );
         }
 
-        req.user = new UserDTO(user);
+        req.user = new UserDTO(user).toJSON();
         next();
 
     } catch (error) {

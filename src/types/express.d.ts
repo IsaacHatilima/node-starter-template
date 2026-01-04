@@ -1,9 +1,10 @@
-import {UserDTO} from "@/dto/UserDTO";
+import {UserDTO} from "../path/to/dtos";
 
 declare global {
     namespace Express {
         interface Request {
-            user?: UserDTO;
+            // Match the actual runtime object logged in your console
+            user: UserDTO;
         }
     }
 }

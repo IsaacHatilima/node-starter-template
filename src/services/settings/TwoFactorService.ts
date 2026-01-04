@@ -16,6 +16,7 @@ import {
     TwoFactorSetupNotFoundError,
     UserNotFoundError
 } from "../../lib/errors";
+import {TwoFactorRequestDTO} from "../../dtos/command/TwoFactorRequestDTO";
 
 export class TwoFactorService {
     // -----------------------------
@@ -67,7 +68,7 @@ export class TwoFactorService {
     // -----------------------------
     // 2. VERIFY TFA CODE & ENABLE
     // -----------------------------
-    async verifyAndEnable(data: { code: string }, reqUser: Request) {
+    async verifyAndEnable(dto: TwoFactorRequestDTO, reqUser: Request) {
         let cached;
         try {
             cached = await redis.get(`tfsetup:${reqUser.user.public_id}`);
@@ -82,7 +83,7 @@ export class TwoFactorService {
         const verified = speakeasy.totp.verify({
             secret: secret.base32,
             encoding: "base32",
-            token: data.code,
+            token: dto.code,
             window: 1,
         });
 

@@ -2,6 +2,7 @@ import {container} from "../../lib/container";
 import {NextFunction, Request, Response} from "express";
 import {fail, success} from "../../lib/response";
 import {forgotPasswordSchema} from "../../schemas/auth";
+import {ForgotPasswordRequestDTO} from "../../dtos/command/ForgotPasswordRequestDTO";
 
 export default async function ForgotPasswordController(req: Request, res: Response, next: NextFunction) {
     try {
@@ -13,7 +14,9 @@ export default async function ForgotPasswordController(req: Request, res: Respon
             });
         }
 
-        await container.forgotPasswordService.requestLink(req.body);
+        const dto = ForgotPasswordRequestDTO.fromParsed(parsed.data);
+
+        await container.forgotPasswordService.requestLink(dto);
         return success(res, {
             message: "A reset link has been sent to your email.",
         });

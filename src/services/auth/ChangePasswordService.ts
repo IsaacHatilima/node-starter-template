@@ -1,17 +1,18 @@
 import bcrypt from "bcrypt";
 import {prisma} from "../../config/db";
 import {AppError, InvalidPasswordTokenError, UserNotFoundError} from "../../lib/errors";
+import {ChangePasswordRequestDTO} from "../../dtos/command/ChangePasswordRequestDTO";
 
 export class ChangePasswordService {
-    async changePassword(data: { token: string, password: string }) {
+    async changePassword(dto: ChangePasswordRequestDTO) {
         const passwordToken = await prisma.passwordResetToken.findUnique({
-            where: {token: data.token}
+            where: {token: dto.token}
         });
         if (!passwordToken) {
             throw new InvalidPasswordTokenError();
         }
 
-        const hashedPassword = await bcrypt.hash(data.password, 10);
+        const hashedPassword = await bcrypt.hash(dto.password, 10);
         try {
             await prisma.user.update({
                 where: {id: passwordToken.userId},
@@ -26,7 +27,7 @@ export class ChangePasswordService {
 
         try {
             await prisma.passwordResetToken.delete({
-                where: {token: data.token},
+                where: {token: dto.token},
             });
         } catch (error: any) {
             if (error.code === "P2025") {

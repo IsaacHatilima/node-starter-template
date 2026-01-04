@@ -9,7 +9,7 @@ export async function createAuthUser(): Promise<{ user: User; access_token: stri
 
     const user = await prisma.user.create({
         data: {
-            email: faker.internet.email(),
+            email: faker.internet.email().toLowerCase(),
             password: hashedPassword,
             profile: {
                 create: {
@@ -33,7 +33,7 @@ export async function createPublicUser() {
 
     return prisma.user.create({
         data: {
-            email: faker.internet.email(),
+            email: faker.internet.email().toLowerCase(),
             password: hashedPassword,
             profile: {
                 create: {

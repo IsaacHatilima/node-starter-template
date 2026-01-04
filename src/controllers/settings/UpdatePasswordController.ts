@@ -2,6 +2,7 @@ import {container} from "../../lib/container";
 import {NextFunction, Request, Response} from "express";
 import {fail, success} from "../../lib/response";
 import {passwordUpdateSchema} from "../../schemas/settings";
+import {UpdatePasswordRequestDTO} from "../../dtos/command/UpdatePasswordRequestDTO";
 
 export default async function UpdatePasswordController(req: Request, res: Response, next: NextFunction) {
     try {
@@ -12,7 +13,9 @@ export default async function UpdatePasswordController(req: Request, res: Respon
                 errors: parsed.error.issues.map((i) => i.message),
             });
         }
-        await container.updatePasswordService.updatePassword(parsed.data, req);
+
+        const dto = UpdatePasswordRequestDTO.fromParsed(parsed.data);
+        await container.updatePasswordService.updatePassword(dto, req);
         return success(res, {
             message: "Password changed successfully.",
         });

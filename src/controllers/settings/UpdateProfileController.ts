@@ -2,6 +2,7 @@ import {container} from "../../lib/container";
 import {NextFunction, Request, Response} from "express";
 import {fail, success} from "../../lib/response";
 import {profileUpdateSchema} from "../../schemas/settings";
+import {UpdateProfileRequestDTO} from "../../dtos/command/UpdateProfileRequestDTO";
 
 export default async function UpdateProfileController(req: Request, res: Response, next: NextFunction) {
     try {
@@ -12,7 +13,9 @@ export default async function UpdateProfileController(req: Request, res: Respons
                 errors: parsed.error.issues.map((i) => i.message),
             });
         }
-        await container.updateProfileService.updateProfile(parsed.data, req);
+
+        const dto = UpdateProfileRequestDTO.fromParsed(parsed.data);
+        await container.updateProfileService.updateProfile(dto, req);
         return success(res, {
             message: "Profile Updated successfully.",
         });

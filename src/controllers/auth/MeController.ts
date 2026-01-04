@@ -1,6 +1,6 @@
-import {container} from "../../lib/container";
 import {NextFunction, Request, Response} from "express";
 import {success} from "../../lib/response";
+import {container} from "../../lib/container";
 
 export default async function MeController(req: Request, res: Response, next: NextFunction) {
     try {

@@ -1,16 +1,16 @@
 import {prisma} from "../../config/db";
-import {normalizeEmail, normalizeName} from "../../utils/string";
 import {redis} from "../../config/redis";
 import {UserDTO} from "../../dtos/read/UserReadDTO";
 import {Request} from "express";
 import {EmailTakenError, UpdateProfileError, UserNotFoundError} from "../../lib/errors";
+import {UpdateProfileRequestDTO} from "../../dtos/command/UpdateProfileRequestDTO";
 
 export class UpdateProfileService {
     async updateProfile(
-        data: { email: string; first_name: string; last_name: string },
+        dto: UpdateProfileRequestDTO,
         reqUser: Request
     ) {
-        const emailChanged = data.email !== reqUser.user.email;
+        const emailChanged = dto.email !== reqUser.user.email;
 
         let updatedUser;
 
@@ -18,12 +18,12 @@ export class UpdateProfileService {
             updatedUser = await prisma.user.update({
                 where: {public_id: reqUser.user.public_id},
                 data: {
-                    email: normalizeEmail(data.email),
+                    email: dto.email,
                     ...(emailChanged && {email_verified_at: null}),
                     profile: {
                         update: {
-                            first_name: normalizeName(data.first_name),
-                            last_name: normalizeName(data.last_name),
+                            first_name: dto.first_name,
+                            last_name: dto.last_name,
                         },
                     },
                 },

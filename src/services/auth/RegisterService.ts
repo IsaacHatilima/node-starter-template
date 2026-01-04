@@ -1,7 +1,6 @@
 import "dotenv/config";
 import {prisma} from "../../config/db";
 import bcrypt from "bcrypt";
-import {normalizeEmail, normalizeName} from "../../utils/string";
 import {container} from "../../lib/container";
 import {buildEmailTemplate, sendMail} from "../../lib/mailer";
 import {EmailTakenError} from "../../lib/errors";
@@ -15,12 +14,12 @@ export class RegisterService {
             const hashedPassword = await bcrypt.hash(dto.password, 10);
             const user = await prisma.user.create({
                 data: {
-                    email: normalizeEmail(dto.email),
+                    email: dto.email,
                     password: hashedPassword,
                     profile: {
                         create: {
-                            first_name: normalizeName(dto.firstName),
-                            last_name: normalizeName(dto.lastName),
+                            first_name: dto.firstName,
+                            last_name: dto.lastName,
                         },
                     },
                 },

@@ -11,10 +11,11 @@ import {
     TwoFactorNotEnabledError,
     TwoFactorUpdateError
 } from "../../lib/errors";
+import {TwoFactorChallengeRequestDTO} from "../../dtos/command/TwoFactorChallengeRequestDTO";
 
 export class TwoFactorChallengeService {
-    async verifyLoginCode(data: { challenge_id: string; code: string }) {
-        const cacheKey = `tfchal:${data.challenge_id}`;
+    async verifyLoginCode(dto: TwoFactorChallengeRequestDTO) {
+        const cacheKey = `tfchal:${dto.challenge_id}`;
 
         const payload = await redis.get(cacheKey);
         if (!payload) {
@@ -43,7 +44,7 @@ export class TwoFactorChallengeService {
             ok = speakeasy.totp.verify({
                 secret: user.two_factor_secret,
                 encoding: "base32",
-                token: data.code,
+                token: dto.code,
                 window: 1,
             });
         }
@@ -51,7 +52,7 @@ export class TwoFactorChallengeService {
         let backupCodes = [...(user.two_factor_recovery_codes ?? [])];
 
         if (!ok && backupCodes.length > 0) {
-            const idx = backupCodes.indexOf(data.code);
+            const idx = backupCodes.indexOf(dto.code);
 
             if (idx !== -1) {
                 ok = true;

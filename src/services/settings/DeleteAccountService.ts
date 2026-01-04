@@ -3,9 +3,10 @@ import bcrypt from "bcrypt";
 import {redis} from "../../config/redis";
 import {Request} from "express";
 import {InvalidPasswordError, LogoutSessionError, UserDeletionError} from "../../lib/errors";
+import {DeleteAccountRequestDTO} from "../../dtos/command/DeleteAccountRequestDTO";
 
 export class DeleteAccountService {
-    async deleteAccount(data: { password: string }, reqUser: Request) {
+    async deleteAccount(dto: DeleteAccountRequestDTO, reqUser: Request) {
         const user = await prisma.user.findUnique({
             where: {public_id: reqUser.user.public_id}
         });
@@ -14,7 +15,7 @@ export class DeleteAccountService {
             throw new InvalidPasswordError();
         }
 
-        const valid = await bcrypt.compare(data.password, user.password);
+        const valid = await bcrypt.compare(dto.password, user.password);
         if (!valid) {
             throw new InvalidPasswordError();
         }

@@ -2,6 +2,7 @@ import {container} from "../../lib/container";
 import {setAuthCookies} from "../../lib/auth-cookies";
 import {NextFunction, Request, Response} from "express";
 import {fail, success} from "../../lib/response";
+import {TwoFactorChallengeRequestDTO} from "../../dtos/command/TwoFactorChallengeRequestDTO";
 
 export async function TwoFactorChallengeController(req: Request, res: Response, next: NextFunction) {
     try {
@@ -14,7 +15,9 @@ export async function TwoFactorChallengeController(req: Request, res: Response, 
             });
         }
 
-        const result = await container.twoFactorChallengeService.verifyLoginCode({challenge_id, code});
+        const dto = TwoFactorChallengeRequestDTO.fromParsed({challenge_id, code});
+
+        const result = await container.twoFactorChallengeService.verifyLoginCode(dto);
 
         setAuthCookies(res, {
             access: result.access_token,
