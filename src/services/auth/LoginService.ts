@@ -12,6 +12,8 @@ import {
     TwoFactorChallengeError
 } from "../../lib/errors";
 import {LoginRequestDTO} from "../../dtos/command/LoginRequestDTO";
+import {env} from "../../utils/environment-variables";
+import ms from "ms";
 
 export class LoginService {
     async login(dto: LoginRequestDTO) {
@@ -55,12 +57,14 @@ export class LoginService {
             id: user.id,
         });
 
+        const refreshExpiryMs = ms(env.JWT_REFRESH_EXPIRES_IN as ms.StringValue);
+
         try {
             await prisma.refreshToken.create({
                 data: {
                     userId: user.id,
                     token: refresh_token,
-                    expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000),
+                    expiresAt: new Date(Date.now() + refreshExpiryMs),
                 },
             });
         } catch (error) {

@@ -17,6 +17,7 @@ export function setAuthCookies(res: Response, tokens: { refresh: string; access:
         httpOnly: true,
         secure: isProduction,
         sameSite: isProduction ? "strict" : "lax",
+        path: "/",
         maxAge: accessMaxAge,
     });
 }
