@@ -4,6 +4,7 @@ import {generateAccessToken, generateRefreshToken} from "../../lib/jwt";
 import {env} from "../../utils/environment-variables";
 import {AppError, InvalidRefreshTokenError} from "../../lib/errors";
 import {redis} from "../../config/redis";
+import ms from "ms";
 
 export class RefreshTokenService {
     async refresh(refreshToken: string) {
@@ -46,6 +47,8 @@ export class RefreshTokenService {
             email: user.email,
         });
 
+        const refreshExpiryMs = ms(env.JWT_REFRESH_EXPIRES_IN as ms.StringValue);
+
         try {
             await prisma.$transaction([
                 prisma.refreshToken.update({
@@ -56,7 +59,7 @@ export class RefreshTokenService {
                     data: {
                         userId: stored.userId,
                         token: newRefresh,
-                        expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000),
+                        expiresAt: new Date(Date.now() + refreshExpiryMs),
                     },
                 }),
             ]);
